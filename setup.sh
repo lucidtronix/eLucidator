@@ -1,18 +1,13 @@
 #! /bin/sh
-cp config_touchscreen.txt /boot/config.txt \
-&& mkdir /etc/X11/xorg.conf.d \
-&& cp 99-calibration /etc/X11/xorg.conf.d/ \
-&& pip install python-instagram \
-&& pip install pi3d \
-&& sudo apt-get update \
-&& sudo apt-get upgrade \
-&& sudo apt-get install build-essential cmake pkg-config \
-&& sudo apt-get install libjpeg-dev libtiff5-dev libjasper-dev libpng12-dev \
-&& sudo apt-get install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev \
-&& sudo apt-get install libxvidcore-dev libx264-dev \
-&& sudo apt-get install libgtk2.0-dev \
-&& sudo apt-get install libatlas-base-dev gfortran \
-&& sudo apt-get install python2.7-dev python3-dev \
+sudo apt-get update \
+&& sudo apt-get -y upgrade \
+&& sudo apt-get -y install build-essential cmake pkg-config \
+&& sudo apt-get -y install libjpeg-dev libtiff5-dev libjasper-dev libpng12-dev \
+&& sudo apt-get -y install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev \
+&& sudo apt-get -y install libxvidcore-dev libx264-dev \
+&& sudo apt-get -y install libgtk2.0-dev \
+&& sudo apt-get -y install libatlas-base-dev gfortran \
+&& sudo apt-get -y install python2.7-dev python3-dev \
 && cd ~ \
 && wget -O opencv.zip https://github.com/Itseez/opencv/archive/3.1.0.zip \
 && unzip opencv.zip \
@@ -25,4 +20,9 @@ cp config_touchscreen.txt /boot/config.txt \
 && make -j4 \
 && sudo make install \
 && sudo ldconfig \
+&& cp config_touchscreen.txt /boot/config.txt \
+&& mkdir /etc/X11/xorg.conf.d \
+&& cp 99-calibration /etc/X11/xorg.conf.d/ \
+&& pip install python-instagram \
+&& pip install pi3d \
 && shutdown -r now
