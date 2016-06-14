@@ -24,7 +24,9 @@ def run(fullscreen=False):
 	while True:
 		main_surface.fill(0)
 		mx, my = pygame.mouse.get_pos()
+		b1, b2, b3 = pygame.mouse.get_pressed()		
 		write_text("Touch Screen Diagnostics", 10, 10, main_surface, font)
+		write_text("B1:"+str(b1)+"  B2:"+str(b2) + "   B3:"+str(b3), 10, 30, main_surface, font)
 		write_text("MX:"+str(mx)+"  MY:"+str(my), 10, 50, main_surface, font)
 		pygame.display.update()
 	
