@@ -25,4 +25,5 @@ sudo apt-get update \
 && cp 99-calibration /etc/X11/xorg.conf.d/ \
 && pip install python-instagram \
 && pip install pi3d \
+&& pip install feedparser \
 && shutdown -r now
