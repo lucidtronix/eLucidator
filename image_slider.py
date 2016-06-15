@@ -11,7 +11,7 @@ def write_text(text, x, y, surface, font, size=1, color=(255,255,255)):
 	label = font.render(text, size, color)
 	surface.blit(label, (x, y))
 
-def run(images_path ='./images/', fullscreen=False):
+def run(images_path ='./images/', fullscreen=True):
 	imgs = os.listdir(images_path)
 	pyimgs = []
 	for img in imgs:
@@ -50,7 +50,7 @@ def run(images_path ='./images/', fullscreen=False):
 			dx = 0
 			sliding = False
 			hold_time = time()-b1_begin
-			if last_hold < 0.5 and last_up < 0.5 and hold_time < 0.5:
+			if 0.01 < last_hold < 0.3 and 0.01 < last_up < 0.3 and 0.01 < hold_time < 0.3:
 				cur_img += 1
 				if cur_img == len(pyimgs):
 					cur_img = 0
