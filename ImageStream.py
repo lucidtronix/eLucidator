@@ -12,13 +12,12 @@ from PIL import Image
 import urllib, cStringIO
 
 class ImageStream(object):
-	def __init__(self, source='dir', format='pygame', cache_path='./', crop_dim=None):
+	def __init__(self, source='dir', format='pygame', cache_path='./'):
 		super(ImageStream, self)
 		self.source = source
 		self.format = format
 		self.cache_path = cache_path
 		self.recording = False
-		self.crop_dim = crop_dim
 		self.cur_image_id = ''
 		self.cur_order = 0
 		self.cached = {}
@@ -34,13 +33,24 @@ class ImageStream(object):
 		self.loaded[image_id] = True
 		self.order.append(image_id)
 
-	def next(self):
-		image = self.images[self.order[self.cur_order]]
+	def add_all(self, new_images):
+		new_ids = new_images.keys()
+		self.images.update(new_images)
+		for iid in new_ids:
+			self.loaded[image_id] = True
+			self.order.append(image_id)	
 
-		self.cur_order += 1
-		if self.cur_order == len(self.order):
-			self.cur_order = 0
-	
-		return image
+	def next(self, crop=None):
+		if len(self.images) > 0:
+			image = self.images[self.order[self.cur_order]]
+
+			self.cur_order += 1
+			if self.cur_order == len(self.order):
+				self.cur_order = 0
+		
+			return image
+		elif self.format == 'pygame':
+			pygame.image.load('./images/dog.jpg')
+
 
 

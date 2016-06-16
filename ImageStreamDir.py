@@ -1,5 +1,5 @@
-# ImageStream.py
-# Base Class for LucidTronix ImageStream objects
+# ImageStreamDir.py
+# Class for LucidTronix ImageStream objects loaded from an existing directory
 # Samwell Freeman
 # June 2016
 
