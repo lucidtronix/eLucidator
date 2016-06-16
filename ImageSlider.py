@@ -17,7 +17,7 @@ from ImageStreamDir import ImageStreamDir
 
 
 class ImageSlider(LucidApp):
-	def __init__(self, cache_path='./', fullscreen=true, resolution=(500, 400), icon=None, base_graphics='pygame'):
+	def __init__(self, cache_path='./', fullscreen=True, resolution=(500, 400), icon=None, base_graphics='pygame'):
 		super(ImageSlider, self).__init__('ImageSlider', cache_path, fullscreen, resolution, icon, base_graphics)
 		self.playing = True
 		self.stream = ImageStreamDir()
