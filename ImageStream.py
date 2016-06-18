@@ -6,6 +6,7 @@
 import os
 import sys
 import cv2
+import pygame
 import threading
 import numpy as np
 from PIL import Image
@@ -34,11 +35,16 @@ class ImageStream(object):
 		self.order.append(image_id)
 
 	def add_all(self, new_images):
-		new_ids = new_images.keys()
-		self.images.update(new_images)
-		for iid in new_ids:
-			self.loaded[image_id] = True
-			self.order.append(image_id)	
+		# new_ids = new_images.keys()
+		# self.images.update(new_images)
+		# for iid in new_ids:
+		# 	self.loaded[image_id] = True
+		# 	self.order.append(image_id)	
+		for img in new_images:
+			self.images[img.get_file_name()] = img.to_surface()
+			self.loaded[img.get_file_name()] = True
+			self.order.append(img.get_file_name())
+
 
 	def next(self, crop=None):
 		if len(self.images) > 0:
@@ -50,7 +56,11 @@ class ImageStream(object):
 		
 			return image
 		elif self.format == 'pygame':
-			pygame.image.load('./images/dog.jpg')
+			print 'returning dog as pygame'
+			return pygame.image.load('./images/dog.jpg')
+		else:
+			print 'next failed returning None.'
+			return None
 
 
 
