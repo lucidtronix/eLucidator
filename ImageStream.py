@@ -59,8 +59,14 @@ class ImageStream(object):
 			print 'returning dog as pygame'
 			return pygame.image.load('./images/dog.jpg')
 		else:
-			print 'next failed returning None.'
+			print 'next failed returning None.', self.format
 			return None
 
 
+	def to_surface(self, pil_image):
+		mode = pil_image.mode
+		size = pil_image.size
+		data = pil_image.tostring()
+		surface = pygame.image.fromstring(data, size, mode)
+		return surface
 

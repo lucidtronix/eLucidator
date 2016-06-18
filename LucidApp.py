@@ -16,7 +16,7 @@ import pygame.ftfont
 
 
 class LucidApp(object):
-	def __init__(self, name, cache_path='./', fullscreen=False, resolution=(400, 300), icon=None, base_graphics='pygame'):
+	def __init__(self, name, cache_path='./cache/', fullscreen=False, resolution=(400, 300), icon=None, base_graphics='pygame'):
 		super(LucidApp, self)
 		self.name = name 
 		self.cache_path = cache_path
