@@ -26,4 +26,5 @@ sudo apt-get update \
 && pip install python-instagram \
 && pip install pi3d \
 && pip install feedparser \
+&& cp ./rc.local /etc/rc.local
 && shutdown -r now
