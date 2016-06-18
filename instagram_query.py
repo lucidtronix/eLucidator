@@ -155,7 +155,7 @@ def instagram_frame():
 	label = myfont.render("Hello", 1, (255,255,0))
 	main_surface.blit(label, (20, 400))
 	#main_surface.blit(pygame.image.load('/home/pi/python_games/boy.png'), (100,50))
-	pygame.diInstagramQuerysplay.update()
+	pygame.display.update()
 	#images = [Image.open('/home/sam/python_games/boy.png')] 
 	images = [] #[Image.open('/home/sam/Dropbox/Photos/k8/IMG_0540.jpg')]
 	#images = get_user_images(users[cur_user], 3)
