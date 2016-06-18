@@ -60,8 +60,12 @@ def url_to_image(url):
 
 def get_tag_images(tag="magicegg", count=5):
 	print("Load images from tag:" + tag)
-	recent_media, url = api.tag_recent_media(tag_name=tag, count=count)
-	print("Got recent media.")
+	#tag_search, next_tag = api.tag_search(q=tag)
+	#recent_media, next = api.tag_recent_media(tag_name=tag_search[0].name)
+	recent_media, next = api.media_popular(count=count)
+
+	#recent_media, url = api.tag_recent_media(tag_name=tag, count=count)
+	print("Got recent media."+str(len(recent_media)))
 	images = []
 	for media in recent_media:  
 		# Where the media is
@@ -186,10 +190,10 @@ def instagram_frame():
 			cur_user += 1
 			if cur_user >= len(users):
 				cur_user = 0
-			if users[cur_user] not in loaded:
-				iq = InstagramQuery(images, users[cur_user], "user")
-				iq.start()
-				loaded.append(users[cur_user])
+			#if users[cur_user] not in loaded:
+				#iq = InstagramQuery(images, users[cur_user], "user")
+				#iq.start()
+				#loaded.append(users[cur_user])
 			last_load = time()
 
 		if len(images) > 0 and time() - last_update > 3:

@@ -7,25 +7,15 @@ import os
 import sys
 import cv2
 import pygame
-import urllib
 import threading
 import numpy as np
 import urllib as ur
 from PIL import Image
 from io import BytesIO
-import urllib, cStringIO
+from time import time, sleep  
 from ImageStream import ImageStream
 from instagram.client import InstagramAPI
-from io import BytesIO
-from time import time, sleep  
 
-from instagram.client import InstagramAPI
-
-access_token ='585822756.695a083.0585d82aaee947edb21bfaf3cf4273de'
-
-api = InstagramAPI(access_token=access_token,  
-					client_ips="99.47.41.77",
-					client_secret="23eae31d8de84810b9b1344c25ee3a6a")
 
 
 
@@ -34,7 +24,7 @@ class ImageStreamInstagram(ImageStream):
 		super(ImageStreamInstagram, self).__init__('Instagram', format, cache_path)
 		self.user = user
 		self.tag = tag
-		#self.api = self.get_instagram_api()
+		self.api = self.get_instagram_api()
 		self.image_buffer = []
 		self.last_query = time()
 		self.queried = False
@@ -51,33 +41,35 @@ class ImageStreamInstagram(ImageStream):
 			print ('Image buffer sync in ImageStreamInstagram')
 
 			super(ImageStreamInstagram, self).add_all(self.image_buffer)
-			#del self.image_buffer
+			del self.image_buffer
+			self.image_buffer = []
 
 		return super(ImageStreamInstagram, self).next()
 
 	def start_query_thread(self):
 		if self.user != '':
-			self.iq = InstagramQuery(self.image_buffer, self.user, "user")
+			self.iq = InstagramQuery(self.api, self.image_buffer, self.user, "user")
 			self.iq.start()
 			print ('Query Started in ImageStreamInstagram')		
 		elif self.tag != '':
-			self.iq = InstagramQuery(self.image_buffer, self.tag, "tag")
+			self.iq = InstagramQuery(self.api, self.image_buffer, self.tag, "tag")
 			self.iq.start()
 			print ('Query Started in ImageStreamInstagram')		
 		else:
 			print ('Must specifiy user or tag in ImageStreamInstagram')				
 
-	# def get_instagram_api(self):
-	# 	access_token ='585822756.695a083.0585d82aaee947edb21bfaf3cf4273de'
+	def get_instagram_api(self):
+		access_token ='585822756.695a083.0585d82aaee947edb21bfaf3cf4273de'
 
-	# 	return InstagramAPI(access_token=access_token,  
-	# 				client_ips="99.47.41.77",
-	# 				client_secret="23eae31d8de84810b9b1344c25ee3a6a")
+		return InstagramAPI(access_token=access_token,  
+					client_ips="99.47.41.77",
+					client_secret="23eae31d8de84810b9b1344c25ee3a6a")
 
 
 class InstagramQuery(threading.Thread):
-	def __init__(self, images, keyword, atype):
+	def __init__(self, api, images, keyword, atype):
 		super(InstagramQuery, self).__init__()
+		self.api = api
 		self.images = images
 		self.keyword = keyword
 		self.atype = atype
@@ -86,10 +78,8 @@ class InstagramQuery(threading.Thread):
 	def run(self):
 
 		new_images = []
-		if self.atype == "tag":
-			new_images = get_tag_images(self.keyword, self.count)
-		elif self.atype == "user":
-			new_images = get_user_images(self.keyword, self.count)
+		if self.atype == "user":
+			new_images = self.get_user_images(self.keyword)
 
 		if len(new_images) > 0:
 			self.images += new_images
@@ -98,48 +88,21 @@ class InstagramQuery(threading.Thread):
 		print("Query ended")
 
 
-def get_tag_images(tag="magicegg", count=5):
-	try:
-		print("Load images from tag:" + tag)
-		recent_media, url = api.tag_recent_media(tag_name=tag, count=count)
+	def get_user_images(self, user_name):
+		results = self.api.user_search(user_name, count=2)
+		uid = results[0].id
+		print 'Load images from user:' + user_name + ' user id:' + uid
+		recent_media, url = self.api.user_recent_media(user_id=uid, count=self.count)
 		new_images = []
-		print("Loaded:"+str(len(recent_media))+" recent media from tag:" + tag)
-
-		for media in recent_media:  
-			# Where the media is
+		for media in recent_media:
 			id_ = media.id
-			# List of users that like the image
-			#users = [user.username for user in media.likes]
-
 			if media.type == 'image':
-				iimg = InstagramMedia(media, tag)
+				iimg = InstagramMedia(media, user_name)
 				new_images.append(iimg)
-			sleep(1)
-		print("Loaded:"+str(len(new_images))+" images from tag:" + tag)
+			sleep(0.5)
+		print("Loaded:"+str(len(new_images))+" images from user:" + user_name)
+		
 		return new_images
-	except:
-		e = sys.exc_info()[0]
-		print 'error in TAG instagram query:', e
-
-
-def get_user_images(user_name, count=1):
-	print('Loook for user:' + user_name)
-	results = api.user_search(user_name, count=2)
-	uid = results[0].id
-	print 'Load images from user:' + user_name + ' user id:' + uid
-	recent_media, url = api.user_recent_media(user_id=uid, count=count)
-	new_images = []
-	for media in recent_media:
-		id_ = media.id
-		if media.type == 'image':
-			print("Image media images from user:" + user_name)
-			iimg = InstagramMedia(media, user_name)
-			print("Iimg" + iimg.get_file_name())
-			new_images.append(iimg)
-		sleep(1)
-	print("Loaded:"+str(len(new_images))+" images from user:" + user_name)
-	
-	return new_images
 
 
 class InstagramMedia:
@@ -147,8 +110,6 @@ class InstagramMedia:
 		self.media = media
 		self.source = source
 		if self.media.type == 'image':
-			print 'Try to make inst media'
-
 			img_url = self.media.images['standard_resolution'].url
 			img_file = self.get_file_name()
 			self.url_to_image(img_url)

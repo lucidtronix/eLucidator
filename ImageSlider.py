@@ -22,7 +22,7 @@ class ImageSlider(LucidApp):
 		self.playing = True
 		self.stream = ImageStreamDir()
 		self.ts = TouchScreen()
-
+		self.row = ImageRow(self.stream, self.ts, self.surface)
 	def __str__(self):
 		return super(ImageSlider, self).__str__() + 'Playing:' + str(self.playing)
 
@@ -52,13 +52,15 @@ class ImageSlider(LucidApp):
 				cur_img = self.stream.next()
 				pic_update = time()
 
-			self.surface.blit(cur_img, (cx,10))
+			# self.surface.blit(cur_img, (cx,10))
 
-			self.label("B1:"+str(b1)+"  B2:"+str(b2) + "   B3:"+str(b3), 10, 30)
-			self.label("MX:"+str(mx)+"  MY:"+str(my), 10, 50)
-			self.label("Last Hold:"+str(self.ts.last_hold), 10, 70)
-			self.label("Double Tap:"+str(self.ts.double_tap), 10, 90)
+			# self.label("B1:"+str(b1)+"  B2:"+str(b2) + "   B3:"+str(b3), 10, 30)
+			# self.label("MX:"+str(mx)+"  MY:"+str(my), 10, 50)
+			# self.label("Last Hold:"+str(self.ts.last_hold), 10, 70)
+			# self.label("Double Tap:"+str(self.ts.double_tap), 10, 90)
 
+			self.row.update()
+			self.row.display()
 
 			pygame.display.update()
 
@@ -69,3 +71,37 @@ class ImageSlider(LucidApp):
 				elif (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
 					pygame.quit()
 					return 0
+
+
+class ImageRow:
+	def __init__(self, stream, ts, surface, wrap=True):
+		self.stream = stream
+		self.ts = ts
+		self.surface = surface
+		self.wrap = wrap
+		self.corner = (10,10)
+		self.last_corner = (10,10)
+		self.margin = 5
+		self.images = []
+		for i in range(3):
+			self.images.append(self.stream.next())
+		self.cur_image = 1
+
+
+	def update(self):
+		if self.ts.sliding:
+			self.corner = (self.last_corner[0] + self.ts.delta[0], self.corner[1])
+		else:
+			self.last_corner = self.corner
+
+	def display(self):
+		self.surface.blit(self.images[self.cur_image], self.corner)
+		if self.corner[0] < 0:
+			rp = (self.corner[0] + 400, 10)
+			self.surface.blit(self.images[self.cur_image+1], rp)
+		else:
+			lp = (self.corner[0] - 400, 10)
+			self.surface.blit(self.images[self.cur_image-1], lp)			
+		pygame.display.update()
+
+
