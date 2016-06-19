@@ -10,35 +10,23 @@ import threading
 import numpy as np
 from PIL import Image
 import urllib, cStringIO
-from ImageStream import ImageStream
 from apiclient.discovery import build
+from ImageStream import ImageStream, InternetImage
 
 
 class ImageStreamGoogle(ImageStream):
 	def __init__(self, shape, source, cache_path='./cache/', format='pygame', keyword='fractal', num_images=10, search_offset=0, force_save=False):
 		super(ImageStreamGoogle, self).__init__('google', format=format, cache_path=cache_path)
 		self.shape = shape
-		self.source = source # Can be file [Works offline], google, instagram, nytimes, facebook  
 		self.keyword = keyword
 		self.cache_path = cache_path
 		self.image_index = 0
 		self.image_search_start = search_offset
 
-		self.images = []
 
-		if self.source == "google":
-			gq = GoogleQuery(self.images, self.keyword, self.cache_path, self.image_search_start)
-			gq.start()
-		elif self.source == "local":
-			img_dirs = os.listdir(self.cache_path)
-			for img_dir in img_dirs:
-				keyword_path = self.cache_path + img_dir + '/'
-				img_files = os.listdir(keyword_path)
-				for img_file in img_files:
-					img_path = keyword_path + img_file
-					ii = InternetImage(self.shape, img_path, keyword_path)
-					self.images.append(ii)
-			print "Local image stream pre-loaded", len(self.images), "image paths."
+		gq = GoogleQuery(self.images, self.keyword, self.cache_path, self.image_search_start)
+		gq.start()
+
 
 	def next(self):
 		if self.image_index >= 0 and self.image_index < len(self.images):
@@ -52,14 +40,7 @@ class ImageStreamGoogle(ImageStream):
 			if self.images[self.image_index].img:
 				self.image_index = (self.image_index+1) % len(self.images)
 				return self.to_surface(self.images[self.image_index].img)
-				# self.images[self.image_index].img
-				# img_array = np.array(self.images[self.image_index].img)
-				# if self.images[self.image_index].img.mode == 'RGBA':
-				# 	img_array = cv2.cvtColor(img_array, cv2.COLOR_RGB2BGRA) # You can use cv2.COLOR_RGBA2BGRA
-				# else:
-				# 	img_array = cv2.cvtColor(img_array, cv2.COLOR_RGB2BGR) # You can use cv2.COLOR_RGBA2BGRA
-				# self.image_index = (self.image_index+1) % len(self.images)
-				# return img_array
+
 			else:
 				print 'Could not load image:', self.images[self.image_index].img_path
 				self.image_index = (self.image_index+1) % len(self.images)
@@ -80,7 +61,6 @@ class GoogleQuery(threading.Thread):
 		self.image_search_start = image_search_start
 		self.developer_key = "AIzaSyCl7ZHvUAhfJQ8UNdpaR4Hpad02PZwZq0U"
 		self.cx = "015656058763772975689:ovnlv9iv52u"
-		self.recording = True
 	def run(self):
 		try:
 			self.image_results = self.google_get_image_results(5)
@@ -98,10 +78,10 @@ class GoogleQuery(threading.Thread):
 						item['link'] = item['link'][:qindex]
 					print 'Title:', item['title'], 'Link:', item['link']
 					ii = InternetImage(item['link'], keyword_path, url=True)
+
+				ii.load()
 				self.images.append(ii)
-			if self.recording:
-				for i in self.images:
-					i.load()
+
 
 		except Exception, e:
 			print 'Error loading google image search results for keyword:', self.keyword
@@ -164,48 +144,6 @@ class GoogleQuery(threading.Thread):
 			except:
 				print 'Error reading:', item['link']
 
-
-
-class InternetImage:
-	def __init__(self, img_path, keyword_path, url=False):
-
-		self.pil_shape = (400, 300)
-		self.img_path = img_path
-		self.keyword_path = keyword_path
-		self.url = url
-		self.loaded = False
-		self.img = None
-
-	def load_image_file(self):
-		self.img = Image.open(self.img_path).convert('RGB')
-		self.img = self.img.resize(self.pil_shape, Image.ANTIALIAS)
-		self.loaded = True
-
-	def load_image_url(self):
-		try:
-			ifile = cStringIO.StringIO(urllib.urlopen(self.img_path).read())
-			print 'Try to open image at:', self.img_path
-
-			self.img = Image.open(ifile).convert('RGB')
-			self.img = self.img.resize(self.pil_shape, Image.ANTIALIAS)
-	
-			self.img_path = self.keyword_path + os.path.basename(self.img_path)
-			print 'Try to save image at:', self.img_path
-			if not os.path.exists(self.img_path):
-				self.img.save(self.img_path)
-			print 'Saved image at:', self.img_path
-	
-			self.loaded = True	
-
-		except Exception, e:
-			print 'Error reading:', self.img_path
-			print 'Error message:', e.message
-
-	def load(self):
-		if self.url:
-			self.load_image_url()
-		else:
-			self.load_image_file()
 
 
 if __name__ == '__main__':
