@@ -13,9 +13,9 @@ from time import time
 from PIL import Image
 import urllib, cStringIO
 from LucidApp import LucidApp
+from TouchScreen import TouchScreen
 from ImageStreamDir import ImageStreamDir
 from ImageStreamGoogle import ImageStreamGoogle
-from TouchScreen import TouchScreen
 
 class ImageSlider(LucidApp):
 	def __init__(self, cache_path='./cache/', fullscreen=False, resolution=(500, 400), icon=None, base_graphics='pygame'):
@@ -23,9 +23,9 @@ class ImageSlider(LucidApp):
 		self.playing = True
 		#self.stream = ImageStreamGoogle((480, 640, 3), "google", cache_path, 'pygame', 'fractals', 5, 0)#ImageStreamDir()
 		self.stream = ImageStreamDir()
-
 		self.ts = TouchScreen()
 		self.row = ImageRow(self.stream, self.ts, self.surface, self.resolution)
+		#self.buttons.append()
 	def __str__(self):
 		return super(ImageSlider, self).__str__() + 'Playing:' + str(self.playing)
 
@@ -45,10 +45,6 @@ class ImageSlider(LucidApp):
 			self.row.update()
 			self.row.display()
 
-			for b in self.buttons:
-				b.show()
-			pygame.display.update()
-
 			for event in pygame.event.get():
 				if (event.type == pygame.QUIT):
 					pygame.quit()
@@ -56,6 +52,16 @@ class ImageSlider(LucidApp):
 				elif (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
 					pygame.quit()
 					return 0
+
+
+			for b in self.buttons:
+				mx, my = pygame.mouse.get_pos()
+				b.show()
+				if b.over(mx, my) and self.ts.double_tap and time()-b.last_press > 0.5:
+					if b.press() < 0:
+						return
+					self.ts.double_tap = False
+
 
 
 class ImageRow:
@@ -66,8 +72,8 @@ class ImageRow:
 		self.resolution = resolution
 		self.wrap = wrap
 		self.margin = 10
-		self.corner = (self.margin, self.margin)
-		self.last_corner = (self.margin, self.margin)
+		self.corner = (self.margin, 5*self.margin)
+		self.last_corner = (self.margin, 5*self.margin)
 		self.images = []
 		self.redraw = False
 		self.cur_image = 1
@@ -116,11 +122,11 @@ class ImageRow:
 			self.surface.blit(self.images[self.cur_image], self.corner)
 			if self.corner[0] < 0:
 				size = self.images[self.cur_image].get_size()
-				rp = (self.corner[0] + size[0] + self.margin, 10)
+				rp = (self.corner[0] + size[0] + self.margin, self.corner[1])
 				self.surface.blit(self.images[self.next_index()], rp)
 			else:
 				size = self.images[self.prev_index()].get_size()
-				lp = (self.corner[0] - (size[0]+self.margin), 10)
+				lp = (self.corner[0] - (size[0]+self.margin), self.corner[1])
 				self.surface.blit(self.images[self.prev_index()], lp)			
 			pygame.display.update()
 

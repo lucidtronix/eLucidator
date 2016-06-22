@@ -23,9 +23,9 @@ class ImageStreamGoogle(ImageStream):
 		self.image_index = 0
 		self.image_search_start = search_offset
 
-
-		gq = GoogleQuery(self.images, self.keyword, self.cache_path, self.image_search_start)
-		gq.start()
+		self.start_query()
+		#gq = GoogleQuery(self.images, self.keyword, self.cache_path, self.image_search_start)
+		#gq.start()
 
 
 	def next(self):
@@ -51,6 +51,10 @@ class ImageStreamGoogle(ImageStream):
 	def completed_loop(self):
 		return self.image_index == len(self.images)-1
 
+	def start_query(self):
+		print 'Starting google image query for keyword:', self.keyword
+		gq = GoogleQuery(self.images, self.keyword, self.cache_path, self.image_search_start)
+		gq.start()
 
 class GoogleQuery(threading.Thread):
 	def __init__(self, images, keyword, cache_path, image_search_start):
@@ -74,13 +78,14 @@ class GoogleQuery(threading.Thread):
 						os.makedirs(keyword_path)
 					qindex = item['link'].find('?')
 					if qindex != -1:
-						print 'Got a Q:', item['link']
+						#print 'Got a Q:', item['link']
 						item['link'] = item['link'][:qindex]
-					print 'Title:', item['title'], 'Link:', item['link']
+					#print 'Title:', item['title'], 'Link:', item['link']
 					ii = InternetImage(item['link'], keyword_path, url=True)
 
 				ii.load()
 				self.images.append(ii)
+			print 'Completed google image query for keyword:', self.keyword
 
 
 		except Exception, e:
