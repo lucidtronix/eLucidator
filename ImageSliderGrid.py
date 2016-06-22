@@ -17,17 +17,20 @@ from TouchScreen import TouchScreen
 from ImageStreamDir import ImageStreamDir
 from ImageStreamGoogle import ImageStreamGoogle
 
-class ImageSlider(LucidApp):
+class ImageSliderGrid(LucidApp):
 	def __init__(self, cache_path='./cache/', fullscreen=False, resolution=(500, 400), icon=None, base_graphics='pygame'):
-		super(ImageSlider, self).__init__('ImageSlider', cache_path, fullscreen, resolution, icon, base_graphics)
+		super(ImageSliderGrid, self).__init__('ImageSliderGrid', cache_path, fullscreen, resolution, icon, base_graphics)
 		self.playing = True
 		#self.stream = ImageStreamGoogle((480, 640, 3), "google", cache_path, 'pygame', 'fractals', 5, 0)#ImageStreamDir()
 		self.stream = ImageStreamDir()
 		self.ts = TouchScreen()
-		self.row = ImageRow(self.stream, self.ts, self.surface, self.resolution, (10, 50))
+		self.rows = []
+		self.rows.append(ImageRow(self.stream, self.ts, self.surface, self.resolution, (10, 50)))
+		self.rows.append(ImageRow(self.stream, self.ts, self.surface, self.resolution, (15, 370)))
+
 		#self.buttons.append()
 	def __str__(self):
-		return super(ImageSlider, self).__str__() + 'Playing:' + str(self.playing)
+		return super(ImageSliderGrid, self).__str__() + 'Playing:' + str(self.playing)
 
 	def open(self):
 		pass
@@ -42,8 +45,16 @@ class ImageSlider(LucidApp):
 
 		while True:
 			self.ts.update()
-			self.row.update()
-			self.row.display()
+
+			update = False
+			for r in self.rows:
+				r.update()
+				if r.redraw and not update:
+					self.surface.fill(0)
+					update = True
+				r.display()
+			if update:
+				pygame.display.update()
 
 			for event in pygame.event.get():
 				if (event.type == pygame.QUIT):
@@ -118,7 +129,6 @@ class ImageRow:
 
 	def display(self):
 		if self.redraw and len(self.images) > 2:
-			self.surface.fill(0)
 			self.surface.blit(self.images[self.cur_image], self.corner)
 			if self.corner[0] < 0:
 				size = self.images[self.cur_image].get_size()
@@ -128,9 +138,8 @@ class ImageRow:
 				size = self.images[self.prev_index()].get_size()
 				lp = (self.corner[0] - (size[0]+self.margin), self.corner[1])
 				self.surface.blit(self.images[self.prev_index()], lp)			
-			pygame.display.update()
 
 
 if __name__ == '__main__':
-	app = ImageSlider()
+	app = ImageSliderGrid()
 	app.run()
