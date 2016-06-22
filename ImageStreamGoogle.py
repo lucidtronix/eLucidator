@@ -65,8 +65,8 @@ class GoogleQuery(threading.Thread):
 		try:
 			self.image_results = self.google_get_image_results(5)
 			for item in self.image_results:
-				keyword_path = self.cache_path + self.keyword + '/'
-				img_path = keyword_path + os.path.basename(item['link'])
+				keyword_path = os.path.join(self.cache_path, self.keyword)
+				img_path =  os.path.join(keyword_path, os.path.basename(item['link']))
 				if os.path.exists(img_path):
 					ii = InternetImage(img_path, keyword_path)
 				else:

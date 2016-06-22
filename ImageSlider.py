@@ -18,10 +18,12 @@ from ImageStreamGoogle import ImageStreamGoogle
 from TouchScreen import TouchScreen
 
 class ImageSlider(LucidApp):
-	def __init__(self, cache_path='./', fullscreen=False, resolution=(500, 400), icon=None, base_graphics='pygame'):
+	def __init__(self, cache_path='./cache/', fullscreen=False, resolution=(500, 400), icon=None, base_graphics='pygame'):
 		super(ImageSlider, self).__init__('ImageSlider', cache_path, fullscreen, resolution, icon, base_graphics)
 		self.playing = True
-		self.stream = ImageStreamGoogle((480, 640, 3), "google", cache_path, 'pygame', 'fractals', 5, 0)#ImageStreamDir()
+		#self.stream = ImageStreamGoogle((480, 640, 3), "google", cache_path, 'pygame', 'fractals', 5, 0)#ImageStreamDir()
+		self.stream = ImageStreamDir()
+
 		self.ts = TouchScreen()
 		self.row = ImageRow(self.stream, self.ts, self.surface, self.resolution)
 	def __str__(self):
@@ -43,6 +45,9 @@ class ImageSlider(LucidApp):
 			self.row.update()
 			self.row.display()
 
+			for b in self.buttons:
+				b.show()
+			pygame.display.update()
 
 			for event in pygame.event.get():
 				if (event.type == pygame.QUIT):
@@ -85,7 +90,7 @@ class ImageRow:
 			else:
 				self.last_corner = self.corner
 				self.redraw = False
-		elif self.stream.size() > 4:
+		elif self.stream.size() > 2:
 			print ' Adding images from stream...'
 			for img in self.stream.images:
 				self.images.append(img.to_surface())

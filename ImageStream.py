@@ -28,7 +28,7 @@ class ImageStream(object):
 
 	def prev(self, crop=None):
 		if len(self.images) > 0:
-			self.cur_image = (self.cur_order-1) % self.size()
+			self.cur_image = (self.cur_image-1) % self.size()
 			return  self.images[self.cur_image].to_surface()
 		elif self.format == 'pygame':
 			print 'returning dog as pygame'
@@ -40,7 +40,7 @@ class ImageStream(object):
 	def next(self, crop=None):
 		if len(self.images) > 0:
 			image = self.images[self.cur_image]
-			self.cur_image = (self.cur_order+1) % self.size()
+			self.cur_image = (self.cur_image+1) % self.size()
 			return image
 		elif self.format == 'pygame':
 			print 'returning dog as pygame'
@@ -56,7 +56,6 @@ class ImageStream(object):
 
 class InternetImage:
 	def __init__(self, img_path, keyword_path, url=False):
-
 		self.pil_shape = (400, 300)
 		self.img_path = img_path
 		self.keyword_path = keyword_path

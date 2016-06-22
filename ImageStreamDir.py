@@ -11,8 +11,7 @@ import threading
 import numpy as np
 from PIL import Image
 import urllib, cStringIO
-from ImageStream import ImageStream
-
+from ImageStream import ImageStream, InternetImage
 
 class ImageStreamDir(ImageStream):
 	def __init__(self, load_strategy='all', format='pygame', dir_path='./images/'):
@@ -32,6 +31,9 @@ class ImageStreamDir(ImageStream):
 		if "pygame" == self.format:
 			imgs = os.listdir(self.dir_path)
 			for img_id in imgs:
-				img = pygame.image.load(self.dir_path+img_id)
-				self.add_image(img_id, img)
+				#img = pygame.image.load(self.dir_path+img_id)
+				ii = InternetImage(self.dir_path+img_id, self.dir_path)
+				ii.load()
+				self.images.append(ii)
 			print 'Loaded'+str(len(self.images))+'Images pygame style.'
+
