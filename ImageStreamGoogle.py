@@ -8,6 +8,7 @@ import cv2
 import pygame
 import threading
 import numpy as np
+from time import time
 from PIL import Image
 import urllib, cStringIO
 from apiclient.discovery import build
@@ -18,11 +19,14 @@ class ImageStreamGoogle(ImageStream):
 	def __init__(self, shape, source, cache_path='./cache/', format='pygame', keyword='fractal', num_images=10, search_offset=0, force_save=False):
 		super(ImageStreamGoogle, self).__init__('google', format=format, cache_path=cache_path)
 		self.shape = shape
-		self.keyword = keyword
 		self.cache_path = cache_path
 		self.image_index = 0
 		self.image_search_start = search_offset
-
+		
+		self.keywords = [keyword]
+		self.cur_keyword = 0
+		self.query_wait = 5 # seconds
+		self.last_query = time() - self.query_wait
 		self.start_query()
 		#gq = GoogleQuery(self.images, self.keyword, self.cache_path, self.image_search_start)
 		#gq.start()
@@ -39,7 +43,7 @@ class ImageStreamGoogle(ImageStream):
 				return super(ImageStreamGoogle, self).next()
 			if self.images[self.image_index].img:
 				self.image_index = (self.image_index+1) % len(self.images)
-				return self.to_surface(self.images[self.image_index].img)
+				return self.images[self.image_index]
 
 			else:
 				print 'Could not load image:', self.images[self.image_index].img_path
@@ -51,10 +55,19 @@ class ImageStreamGoogle(ImageStream):
 	def completed_loop(self):
 		return self.image_index == len(self.images)-1
 
+	def add_keyword(self, keyword):
+		self.keywords.append(keyword)
+		self.cur_keyword = (self.cur_keyword+1)%len(self.keywords)
+
 	def start_query(self):
-		print 'Starting google image query for keyword:', self.keyword
-		gq = GoogleQuery(self.images, self.keyword, self.cache_path, self.image_search_start)
-		gq.start()
+		if time() - self.last_query > self.query_wait:
+			print 'Starting google image query for keyword:',  self.keywords[self.cur_keyword]
+			gq = GoogleQuery(self.images, self.keywords[self.cur_keyword], self.cache_path, self.image_search_start)
+			gq.start()
+			self.last_query = time()
+			#self.cur_keyword = (self.cur_keyword+1)%len(self.keywords)
+		else:
+			print 'Query denied. Last query:', self.last_query
 
 class GoogleQuery(threading.Thread):
 	def __init__(self, images, keyword, cache_path, image_search_start):

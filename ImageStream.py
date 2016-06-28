@@ -32,7 +32,7 @@ class ImageStream(object):
 			return  self.images[self.cur_image].to_surface()
 		elif self.format == 'pygame':
 			print 'returning dog as pygame'
-			return pygame.image.load('./images/dog.jpg')
+			return InternetImage('./images/dog.jpg', './images/')
 		else:
 			print 'next failed returning None.', self.format
 			return None
@@ -44,7 +44,7 @@ class ImageStream(object):
 			return image
 		elif self.format == 'pygame':
 			print 'returning dog as pygame'
-			return pygame.image.load('./images/dog.jpg')
+			return InternetImage('./images/dog.jpg', './images/')
 		else:
 			print 'next failed returning None.', self.format
 			return None
@@ -64,9 +64,13 @@ class InternetImage:
 		self.img = None
 
 	def load_image_file(self):
-		self.img = Image.open(self.img_path).convert('RGB')
-		self.img = self.img.resize(self.pil_shape, Image.ANTIALIAS)
-		self.loaded = True
+		try:
+			self.img = Image.open(self.img_path).convert('RGB')
+			self.img = self.img.resize(self.pil_shape, Image.ANTIALIAS)
+			self.loaded = True
+		except Exception, e:
+			print 'Image from file Error reading:', self.img_path
+			print 'Error message:', e.message
 
 	def load_image_url(self):
 		try:
@@ -76,7 +80,7 @@ class InternetImage:
 			self.img = Image.open(ifile).convert('RGB')
 			self.img = self.img.resize(self.pil_shape, Image.ANTIALIAS)
 	
-			self.img_path = self.keyword_path + os.path.basename(self.img_path)
+			self.img_path = os.path.join(self.keyword_path, os.path.basename(self.img_path))
 			print 'Try to save image at:', self.img_path
 			if not os.path.exists(self.img_path):
 				self.img.save(self.img_path)
@@ -95,8 +99,14 @@ class InternetImage:
 			self.load_image_file()
 
 	def to_surface(self):
-		mode = self.img.mode
-		size = self.img.size
-		data = self.img.tostring()
-		surface = pygame.image.fromstring(data, size, mode)
-		return surface
+		if self.loaded:
+			mode = self.img.mode
+			size = self.img.size
+			data = self.img.tostring()
+			surface = pygame.image.fromstring(data, size, mode)
+			return surface
+		else:
+			return pygame.image.load('./images/dog.jpg')
+
+	def get_size(self):
+		return self.pil_shape

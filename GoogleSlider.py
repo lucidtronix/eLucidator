@@ -7,6 +7,7 @@ import os
 import sys
 import cv2
 import pygame
+import random
 import threading
 import numpy as np
 from time import time
@@ -21,10 +22,15 @@ class GoogleSlider(LucidApp):
 	def __init__(self, cache_path='./cache/', fullscreen=False, resolution=(500, 400), icon=None, base_graphics='pygame'):
 		super(GoogleSlider, self).__init__('GoogleSlider', cache_path, fullscreen, resolution, icon, base_graphics)
 		self.playing = True
-		self.stream = ImageStreamGoogle((480, 640, 3), "google", cache_path, 'pygame', 'fractals', 5, 0)#ImageStreamDir()
 		self.ts = TouchScreen()
+		self.buttons.append(Button(self, 'more', (55,10, 65, 20), (25,250, 250), self.get_more_images))
+		self.keywords = ['fractals', 'lucidtronix', 'trending', 'beauty', 'sunset', 'caravaggio', 'chiaroscuro', 
+						'evolution', 'ocean', 'samwell freeman', 'neural network', 'achievement', 'trees', 'palms',
+						'friends', 'cute animals', 'learning', 'truth', 'current events', 'news', 'timeless', 'mountains']
+		self.cur_keyword = random.randrange(len(self.keywords))
+		self.stream = ImageStreamGoogle((480, 640, 3), "google", cache_path, 'pygame', self.keywords[self.cur_keyword], 5, 0)#ImageStreamDir()
 		self.row = ImageRow(self.stream, self.ts, self.surface, self.resolution)
-		self.buttons.append(Button(self, 'more', (65,10, 45, 20), (25,250, 250), self.stream.start_query))
+		self.redraw = True
 
 	def __str__(self):
 		return super(ImageSlider, self).__str__() + 'Playing:' + str(self.playing)
@@ -45,6 +51,11 @@ class GoogleSlider(LucidApp):
 			self.row.update()
 			self.row.display()
 
+			if self.redraw or self.row.redraw:
+				self.label(self.keywords[self.cur_keyword], 400, 12)
+				pygame.display.update()
+
+
 			for event in pygame.event.get():
 				if (event.type == pygame.QUIT):
 					pygame.quit()
@@ -60,6 +71,14 @@ class GoogleSlider(LucidApp):
 					b.press()
 					self.ts.double_tap = False
 
+	def get_more_images(self):
+		self.cur_keyword = random.randrange(len(self.keywords))
+		self.stream.add_keyword(self.keywords[self.cur_keyword])
+		self.stream.start_query()
+		
+		self.surface.fill(0)
+		self.redraw = True
+		self.row.redraw = True
 
 
 class ImageRow:
@@ -84,19 +103,20 @@ class ImageRow:
 				self.corner = (self.last_corner[0] + self.ts.delta[0], self.corner[1])
 				self.redraw = True
 				if self.corner[0] + self.image_widths() < self.resolution[0]:
-					self.cur_image = (self.cur_image+1)%self.stream.size()
+					self.cur_image = (self.cur_image+1)%len(self.images)
 					self.corner = (self.margin, self.corner[1])
 					self.last_corner = (self.last_corner[0] + self.images[self.prev_index()].get_size()[0], self.corner[1])
 				elif self.corner[0] > self.images[self.cur_image].get_size()[0]+self.margin:
 					self.corner = (self.corner[0]-self.images[self.cur_image].get_size()[0], self.corner[1])
 					self.last_corner = (self.last_corner[0] -self.images[self.cur_image].get_size()[0], self.corner[1])
-					self.cur_image = (self.cur_image-1)%self.stream.size()
+					self.cur_image = (self.cur_image-1)%len(self.images)
 			else:
 				self.last_corner = self.corner
 				self.redraw = False
-		elif self.stream.size() > len(self.images):
+		
+		if self.stream.size() > len(self.images):
 			print ' Adding image from stream...'
-			self.images.append(self.stream.next().to_surface())
+			self.images.append(self.stream.next())
 
 
 	def image_widths(self):
@@ -108,24 +128,23 @@ class ImageRow:
 
 
 	def prev_index(self):
-		return (self.cur_image-1) % self.stream.size()
+		return (self.cur_image-1) % len(self.images)
 
 	def next_index(self):
-		return (self.cur_image+1) % self.stream.size()
+		return (self.cur_image+1) % len(self.images)
 
 	def display(self):
 		if self.redraw and len(self.images) > 2:
 			self.surface.fill(0)
-			self.surface.blit(self.images[self.cur_image], self.corner)
+			self.surface.blit(self.images[self.cur_image].to_surface(), self.corner)
 			if self.corner[0] < 0:
-				size = self.images[self.cur_image].get_size()
+				size = self.images[self.cur_image].to_surface().get_size()
 				rp = (self.corner[0] + size[0] + self.margin, self.corner[1])
-				self.surface.blit(self.images[self.next_index()], rp)
+				self.surface.blit(self.images[self.next_index()].to_surface(), rp)
 			else:
 				size = self.images[self.prev_index()].get_size()
 				lp = (self.corner[0] - (size[0]+self.margin), self.corner[1])
-				self.surface.blit(self.images[self.prev_index()], lp)			
-			pygame.display.update()
+				self.surface.blit(self.images[self.prev_index()].to_surface(), lp)			
 
 if __name__ == '__main__':
 	app = GoogleSlider()
