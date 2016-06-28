@@ -71,8 +71,8 @@ class Button:
 
 	def show(self):
 		if self.app.base_graphics == 'pygame':
-			AAfilledRoundedRect(self.app.surface, self.rect, self.color,0.5)
-
+			#AAfilledRoundedRect(self.app.surface, self.rect, self.color,0.5)
+			pygame.draw.rect(self.app.surface, self.color, self.rect, 0)
 		self.app.label(self.name, self.rect[0]+6, self.rect[1])
 		pygame.display.update()
 

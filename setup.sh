@@ -23,8 +23,9 @@ sudo apt-get update \
 && cp config_touchscreen.txt /boot/config.txt \
 && mkdir /etc/X11/xorg.conf.d \
 && cp 99-calibration /etc/X11/xorg.conf.d/ \
-&& pip install python-instagram \
-&& pip install pi3d \
-&& pip install feedparser \
+&& pip install --upgrade python-instagram \
+&& pip install --upgrade pi3d \
+&& pip install --upgrade feedparser \
+&& pip install --upgrade google-api-python-client
 && cp ./rc.local /etc/rc.local
 && shutdown -r now
