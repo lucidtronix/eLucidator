@@ -19,11 +19,11 @@ from ImageStreamDir import ImageStreamDir
 from ImageStreamGoogle import ImageStreamGoogle
 
 class GoogleSlider(LucidApp):
-	def __init__(self, cache_path='./cache/', fullscreen=False, resolution=(500, 400), icon=None, base_graphics='pygame'):
+	def __init__(self, cache_path='./cache/', fullscreen=True, resolution=(500, 400), icon=None, base_graphics='pygame'):
 		super(GoogleSlider, self).__init__('GoogleSlider', cache_path, fullscreen, resolution, icon, base_graphics)
 		self.playing = True
 		self.ts = TouchScreen()
-		self.buttons.append(Button(self, 'more', (55,10, 65, 20), (25,250, 250), self.get_more_images))
+		self.buttons.append(Button(self, 'more', (55,10, 65, 20), (25,250,250), self.get_more_images))
 		self.keywords = ['fractals', 'lucidtronix', 'trending', 'beauty', 'sunset', 'caravaggio', 'chiaroscuro', 
 						'evolution', 'ocean', 'samwell freeman', 'neural network', 'achievement', 'trees', 'palms',
 						'friends', 'cute animals', 'learning', 'truth', 'current events', 'news', 'timeless', 'mountains']
