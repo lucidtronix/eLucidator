@@ -60,18 +60,12 @@ class InternetImage:
 		self.img_path = img_path
 		self.keyword_path = keyword_path
 		self.loaded = False
+		self.error = False
 		self.pil_img = None
 		self.cv_img = None
 
 		lt = Thread(target=self.load)
 		lt.start()
-
-
-	def url_to_filename(self):
-		if self.url:
-			img_file = self.img_path.replace("http://", "").replace("https://", "").replace("/", "__").strip()
-			img_file = img_file.split('?', 1)[0]
-			return img_file
 
 	def load_image_file(self):
 		try:
@@ -82,6 +76,7 @@ class InternetImage:
 		except Exception, e:
 			print 'Image from file Error reading:', self.img_path
 			print 'Error message:', e.message
+			self.error = True
 
 	def load_image_url(self):
 		try:
@@ -102,6 +97,7 @@ class InternetImage:
 		except Exception, e:
 			print 'Error loading image from URL:', self.img_path
 			print 'Error message:', e.message
+			self.error = True
 
 	def load(self):
 		if 'http' in self.img_path:
@@ -116,8 +112,10 @@ class InternetImage:
 			data = self.pil_img.tostring()
 			surface = pygame.image.fromstring(data, size, mode)
 			return surface
+		elif self.error:
+			return pygame.image.load('./images/cat.jpg')
 		else:
 			return pygame.image.load('./images/dog.jpg')
 
 	def get_size(self):
-		return self.pil_shape
+		return self.crop

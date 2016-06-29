@@ -52,7 +52,7 @@ class GoogleSlider(LucidApp):
 			self.row.display()
 
 			if self.redraw or self.row.redraw:
-				self.label(self.keywords[self.cur_keyword], 400, 12)
+				self.label(self.keywords[self.cur_keyword], 300, 12)
 				pygame.display.update()
 
 
@@ -72,7 +72,7 @@ class GoogleSlider(LucidApp):
 					self.ts.double_tap = False
 
 	def get_more_images(self):
-		self.cur_keyword = random.randrange(len(self.keywords))
+		self.cur_keyword = (self.cur_keyword+1)%len(self.keywords)
 		self.stream.add_keyword(self.keywords[self.cur_keyword])
 		self.stream.start_query()
 		
@@ -96,9 +96,9 @@ class ImageRow:
 		self.cur_image = 1
 
 
-
 	def update(self):
 		if len(self.images) > 2:
+			
 			if self.ts.sliding:
 				self.corner = (self.last_corner[0] + self.ts.delta[0], self.corner[1])
 				self.redraw = True
@@ -113,7 +113,10 @@ class ImageRow:
 			else:
 				self.last_corner = self.corner
 				self.redraw = False
-		
+
+			if self.images[self.next_index()].error:
+				del self.images[self.next_index()]
+
 		if self.stream.size() > len(self.images):
 			print ' Adding image from stream...'
 			self.images.append(self.stream.next())
@@ -124,7 +127,6 @@ class ImageRow:
 			return self.images[self.cur_image].get_size()[0] + self.images[self.next_index()].get_size()[0] + (2*self.margin)
 		else:
 			return self.images[self.cur_image].get_size()[0] + self.images[self.prev_index()].get_size()[0] + (2*self.margin)
-
 
 
 	def prev_index(self):

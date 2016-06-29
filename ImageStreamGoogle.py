@@ -16,22 +16,21 @@ from ImageStream import ImageStream, InternetImage
 
 
 class ImageStreamGoogle(ImageStream):
-	def __init__(self, shape, source, cache_path='./cache/', format='pygame', keyword='fractal', num_images=10, search_offset=0, force_save=False):
+	def __init__(self, shape, source, cache_path='./cache/', format='pygame', keyword='fractal', num_images=3, search_offset=0, force_save=False):
 		super(ImageStreamGoogle, self).__init__('google', format=format, cache_path=cache_path)
 		self.shape = shape
 		self.cache_path = cache_path
 
 		self.image_search_start = search_offset
+		self.num_images = num_images
+		self.developer_key = 'AIzaSyCl7ZHvUAhfJQ8UNdpaR4Hpad02PZwZq0U'
+		self.cx = "015656058763772975689:ovnlv9iv52u"
 		
 		self.keywords = [keyword]
 		self.cur_keyword = 0
 		self.query_wait = 2 # seconds
-		self.last_query = time()
+		self.last_query = time()-self.query_wait
 		self.start_query()
-		self.image_search_start = 0
-		self.num_images = 3
-		self.developer_key = 'AIzaSyCl7ZHvUAhfJQ8UNdpaR4Hpad02PZwZq0U'
-		self.cx = "015656058763772975689:ovnlv9iv52u"
 
 	def add_keyword(self, keyword):
 		self.keywords.append(keyword)
