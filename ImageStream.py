@@ -7,10 +7,10 @@ import os
 import sys
 import cv2
 import pygame
-import threading
 import numpy as np
 from PIL import Image
 import urllib, cStringIO
+from threading import Thread
 
 class ImageStream(object):
 	def __init__(self, source='dir', format='pygame', cache_path='./'):
@@ -55,27 +55,29 @@ class ImageStream(object):
 
 
 class InternetImage:
-	def __init__(self, img_path, keyword_path, url=False, auto_load=True):
-		self.pil_shape = (400, 300)
+	def __init__(self, img_path, keyword_path):
+		self.crop = (400, 300)
 		self.img_path = img_path
 		self.keyword_path = keyword_path
-		self.url = url
 		self.loaded = False
-		self.img = None
-		if auto_load:
-			ilt = ImageLoadThread(self)
-			ilt.start()
+		self.pil_img = None
+		self.cv_img = None
+
+		lt = Thread(target=self.load)
+		lt.start()
+
 
 	def url_to_filename(self):
 		if self.url:
-			img_file = self.img_path.replace("http://", "").replace("/", "__").strip()
+			img_file = self.img_path.replace("http://", "").replace("https://", "").replace("/", "__").strip()
 			img_file = img_file.split('?', 1)[0]
 			return img_file
 
 	def load_image_file(self):
 		try:
-			self.img = Image.open(self.img_path).convert('RGB')
-			self.img = self.img.resize(self.pil_shape, Image.ANTIALIAS)
+			print 'Loading image from file:', self.img_path
+			self.pil_img = Image.open(self.img_path).convert('RGB')
+			self.pil_img = self.pil_img.resize(self.crop, Image.ANTIALIAS)
 			self.loaded = True
 		except Exception, e:
 			print 'Image from file Error reading:', self.img_path
@@ -86,34 +88,32 @@ class InternetImage:
 			print 'Try to load url image at:', self.img_path
 			ifile = cStringIO.StringIO(urllib.urlopen(self.img_path).read())
 			print 'Try to OPEN url image.'
-			self.img = Image.open(ifile).convert('RGB')
+			self.pil_img = Image.open(ifile).convert('RGB')
 			print 'Try to RESIZE url image.'
-
-			self.img = self.img.resize(self.pil_shape, Image.ANTIALIAS)
-			
-			self.img_path = os.path.join(self.keyword_path, self.url_to_filename())
-			print 'Try to save image at:', self.img_path
+			self.pil_img = self.pil_img.resize(self.crop, Image.ANTIALIAS)
+			self.img_path = os.path.join(self.keyword_path, os.path.basename(self.img_path))
 			if not os.path.exists(self.img_path):
-				self.img.save(self.img_path)
-			print 'Saved image at:', self.img_path
+				print 'Try to save image at:', self.img_path
+				self.pil_img.save(self.img_path)
+				print 'Saved image at:', self.img_path
 	
 			self.loaded = True	
 
 		except Exception, e:
-			print 'Error reading:', self.img_path
+			print 'Error loading image from URL:', self.img_path
 			print 'Error message:', e.message
 
 	def load(self):
-		if self.url:
+		if 'http' in self.img_path:
 			self.load_image_url()
 		else:
 			self.load_image_file()
 
 	def to_surface(self):
 		if self.loaded:
-			mode = self.img.mode
-			size = self.img.size
-			data = self.img.tostring()
+			mode = self.pil_img.mode
+			size = self.pil_img.size
+			data = self.pil_img.tostring()
 			surface = pygame.image.fromstring(data, size, mode)
 			return surface
 		else:
@@ -121,11 +121,3 @@ class InternetImage:
 
 	def get_size(self):
 		return self.pil_shape
-
-class ImageLoadThread(threading.Thread):
-	def __init__(self, image):
-		super(ImageLoadThread, self).__init__()
-		self.image = image
-	
-	def run(self):
-		self.image.load()
