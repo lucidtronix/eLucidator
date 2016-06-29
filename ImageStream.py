@@ -55,13 +55,22 @@ class ImageStream(object):
 
 
 class InternetImage:
-	def __init__(self, img_path, keyword_path, url=False):
+	def __init__(self, img_path, keyword_path, url=False, auto_load=True):
 		self.pil_shape = (400, 300)
 		self.img_path = img_path
 		self.keyword_path = keyword_path
 		self.url = url
 		self.loaded = False
 		self.img = None
+		if auto_load:
+			ilt = ImageLoadThread(self)
+			ilt.start()
+
+	def url_to_filename(self):
+		if self.url:
+			img_file = self.img_path.replace("http://", "").replace("/", "__").strip()
+			img_file = img_file.split('?', 1)[0]
+			return img_file
 
 	def load_image_file(self):
 		try:
@@ -74,13 +83,15 @@ class InternetImage:
 
 	def load_image_url(self):
 		try:
+			print 'Try to load url image at:', self.img_path
 			ifile = cStringIO.StringIO(urllib.urlopen(self.img_path).read())
-			print 'Try to open image at:', self.img_path
-
+			print 'Try to OPEN url image.'
 			self.img = Image.open(ifile).convert('RGB')
+			print 'Try to RESIZE url image.'
+
 			self.img = self.img.resize(self.pil_shape, Image.ANTIALIAS)
-	
-			self.img_path = os.path.join(self.keyword_path, os.path.basename(self.img_path))
+			
+			self.img_path = os.path.join(self.keyword_path, self.url_to_filename())
 			print 'Try to save image at:', self.img_path
 			if not os.path.exists(self.img_path):
 				self.img.save(self.img_path)
@@ -110,3 +121,11 @@ class InternetImage:
 
 	def get_size(self):
 		return self.pil_shape
+
+class ImageLoadThread(threading.Thread):
+	def __init__(self, image):
+		super(ImageLoadThread, self).__init__()
+		self.image = image
+	
+	def run(self):
+		self.image.load()

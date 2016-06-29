@@ -6,14 +6,14 @@
 import os
 import sys
 import cv2
+import pygame
 import threading
 import numpy as np
-from PIL import Image
-import urllib, cStringIO
-import pygame
-import pygame.ftfont
 from pygame import *
+import pygame.ftfont
+from PIL import Image
 from time import time
+import urllib, cStringIO
 
 class LucidApp(object):
 	def __init__(self, name, cache_path='./cache/', fullscreen=False, resolution=(400, 300), icon=None, base_graphics='pygame'):
@@ -27,7 +27,7 @@ class LucidApp(object):
 		self.icon = icon
 		self.base_graphics = base_graphics
 		self.buttons = []
-		self.buttons.append(Button(self, 'exit', (10,10, 45, 20), (25,250, 250), exit_pygame))
+		self.buttons.append(Button(self, 'exit', (10,10,55,30), (25,250,250), exit_pygame))
 		if self.base_graphics == 'pygame':
 			self.pygame_init()
 
@@ -65,6 +65,7 @@ class Button:
 		self.name = name
 		self.rect = rect
 		self.color = color
+		self.highlight = (0,255,200)
 		self.callback = callback
 		self.icon = icon
 		self.last_press = 0
@@ -72,11 +73,17 @@ class Button:
 	def show(self):
 		if self.app.base_graphics == 'pygame':
 			#AAfilledRoundedRect(self.app.surface, self.rect, self.color,0.5)
-			pygame.draw.rect(self.app.surface, self.color, self.rect, 0)
-		self.app.label(self.name, self.rect[0]+6, self.rect[1])
-		pygame.display.update()
+			if self.over():
+				pygame.draw.rect(self.app.surface, self.highlight, self.rect, 0)
+			else:
+				pygame.draw.rect(self.app.surface, self.color, self.rect, 0)
 
-	def over(self, x, y):
+			self.app.label(self.name, self.rect[0]+6, self.rect[1]+(self.rect[3]/2) - 10)
+			pygame.display.update()
+
+	def over(self, x=None, y=None):
+		if x is None or y is None:
+			x, y = pygame.mouse.get_pos()
 		return self.rect[0] < x < self.rect[0]+self.rect[2] and self.rect[1] < y < self.rect[1]+self.rect[3]
 
 	def press(self):
