@@ -66,20 +66,23 @@ class Button:
 		self.rect = rect
 		self.color = color
 		self.highlight = (0,255,200)
+		self.cur_color = self.color
 		self.callback = callback
 		self.icon = icon
 		self.last_press = 0
 
 	def show(self):
+		if self.over():
+			self.cur_color = self.highlight
+		else:
+			self.cur_color = self.color
 		if self.app.base_graphics == 'pygame':
-			#AAfilledRoundedRect(self.app.surface, self.rect, self.color,0.5)
-			if self.over():
-				pygame.draw.rect(self.app.surface, self.highlight, self.rect, 0)
-			else:
-				pygame.draw.rect(self.app.surface, self.color, self.rect, 0)
+			pygame.draw.rect(self.app.surface, self.cur_color, self.rect, 0)
+		elif self.app.base_graphics == 'cv2':
+			pt2 = (x + self.size[0], y + self.size[1])
+			cv2.rectangle(canvas, (self.rect[0], self.rect[1]), pt2, self.cur_color, -1)
+		self.app.label(self.name, self.rect[0]+6, self.rect[1]+(self.rect[3]/2) - 10)
 
-			self.app.label(self.name, self.rect[0]+6, self.rect[1]+(self.rect[3]/2) - 10)
-			pygame.display.update()
 
 	def over(self, x=None, y=None):
 		if x is None or y is None:

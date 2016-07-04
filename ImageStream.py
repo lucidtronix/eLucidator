@@ -29,7 +29,7 @@ class ImageStream(object):
 	def prev(self, crop=None):
 		if len(self.images) > 0:
 			self.cur_image = (self.cur_image-1) % self.size()
-			return  self.images[self.cur_image].to_surface()
+			return  self.images[self.cur_image]
 		elif self.format == 'pygame':
 			print 'returning dog as pygame'
 			return InternetImage('./images/dog.jpg', './images/')
@@ -55,10 +55,11 @@ class ImageStream(object):
 
 
 class InternetImage:
-	def __init__(self, img_path, keyword_path):
+	def __init__(self, img_path, keyword_path, format='pygame'):
 		self.crop = (400, 300)
 		self.img_path = img_path
 		self.keyword_path = keyword_path
+		self.format = format
 		self.loaded = False
 		self.error = False
 		self.pil_img = None
@@ -69,10 +70,14 @@ class InternetImage:
 
 	def load_image_file(self):
 		try:
-			print 'Loading image from file:', self.img_path
-			self.pil_img = Image.open(self.img_path).convert('RGB')
-			self.pil_img = self.pil_img.resize(self.crop, Image.ANTIALIAS)
-			self.loaded = True
+			if self.format == 'pygame':
+				print 'Loading image from file:', self.img_path
+				self.pil_img = Image.open(self.img_path).convert('RGB')
+				self.pil_img = self.pil_img.resize(self.crop, Image.ANTIALIAS)
+				self.loaded = True
+			elif self.format == 'cv2':
+				pic = cv2.imread(self.img_path)
+				self.cv_img = cv2.resize(pic, self.crop, interpolation = cv2.INTER_AREA)
 		except Exception, e:
 			print 'Image from file Error reading:', self.img_path
 			print 'Error message:', e.message
@@ -83,15 +88,20 @@ class InternetImage:
 			print 'Try to load url image at:', self.img_path
 			ifile = cStringIO.StringIO(urllib.urlopen(self.img_path).read())
 			print 'Try to OPEN url image.'
-			self.pil_img = Image.open(ifile).convert('RGB')
-			print 'Try to RESIZE url image.'
-			self.pil_img = self.pil_img.resize(self.crop, Image.ANTIALIAS)
-			self.img_path = os.path.join(self.keyword_path, os.path.basename(self.img_path))
-			if not os.path.exists(self.img_path):
-				print 'Try to save image at:', self.img_path
-				self.pil_img.save(self.img_path)
-				print 'Saved image at:', self.img_path
-	
+			if 'pygame' == self.format:
+				self.pil_img = Image.open(ifile).convert('RGB')
+				print 'Try to RESIZE url image.'
+				self.pil_img = self.pil_img.resize(self.crop, Image.ANTIALIAS)
+				self.img_path = os.path.join(self.keyword_path, os.path.basename(self.img_path))
+				if not os.path.exists(self.img_path):
+					print 'Try to save image at:', self.img_path
+					self.pil_img.save(self.img_path)
+					print 'Saved image at:', self.img_path
+			elif 'cv2' == self.format:
+				pic = cv2.imread(ifile)
+				self.cv_img = cv2.reasize(pic, self.crop, interpolation=cv2.INTER_AREA)
+			else:
+				print 'Unknown format type for Internet Image'
 			self.loaded = True	
 
 		except Exception, e:
@@ -106,7 +116,7 @@ class InternetImage:
 			self.load_image_file()
 
 	def to_surface(self):
-		if self.loaded:
+		if self.loaded and self.pil_img:
 			mode = self.pil_img.mode
 			size = self.pil_img.size
 			data = self.pil_img.tostring()
@@ -116,6 +126,14 @@ class InternetImage:
 			return pygame.image.load('./images/cat.jpg')
 		else:
 			return pygame.image.load('./images/dog.jpg')
+
+	def to_array(self):
+		if self.loaded and self.cv_img:
+			return self.cv_img
+		elif self.error:
+			return cv2.imread('./images/cat.jpg')
+		else:
+			return cv2.imread('./images/dog.jpg')
 
 	def get_size(self):
 		return self.crop
