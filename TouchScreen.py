@@ -3,6 +3,7 @@
 # Samwell Freeman
 # June 2016
 
+import cv2
 import pygame
 from time import time
 
@@ -17,9 +18,22 @@ class TouchScreen:
 		self.sliding = False
 		self.double_tap = False
 		self.double_tap_time = 0
+		self.base_graphics = 'cv2'
+		self.mx = 0
+		self.my = 0
+		self.b1 = False
+		if self.base_graphics == 'cv2':
+			mouse_params = [self]
+			cv2.setMouseCallback('canvas', mouse_callback_cv, mouse_params)
+
 	def update(self):
-		mx, my = pygame.mouse.get_pos()
-		b1, b2, b3 = pygame.mouse.get_pressed()
+		if self.base_graphics == 'pygame':
+			mx, my = pygame.mouse.get_pos()
+			b1, b2, b3 = pygame.mouse.get_pressed()
+		elif self.base_graphics == 'cv2':
+			mx = self.mx
+			my = self.my
+			b1 = self.b1
 
 		if b1:
 			self.double_tap = False
@@ -42,3 +56,18 @@ class TouchScreen:
 
 		if time()-self.double_tap_time > 0.5:
 			self.double_tap = False
+
+
+# mouse callback function
+def mouse_callback_cv(event,x,y,flags,param):
+	if event == cv2.EVENT_LBUTTONDOWN:
+		param[0].b1 = True
+	elif event == cv2.EVENT_LBUTTONUP:
+		param[0].b1 = False
+	elif event == cv2.EVENT_RBUTTONDBLCLK:
+		print 'R dubble click'
+	elif event == cv2.EVENT_MOUSEMOVE:	
+		param[0].mx = x
+		param[0].my = y
+
+

@@ -8,6 +8,7 @@ import sys
 import cv2
 import pygame
 import random
+import argparse
 import threading
 import numpy as np
 from time import time
@@ -149,5 +150,9 @@ class ImageRow:
 				self.surface.blit(self.images[self.prev_index()].to_surface(), lp)			
 
 if __name__ == '__main__':
-	app = GoogleSlider()
+	parser = argparse.ArgumentParser()
+	parser.add_argument('--fullscreen', dest='fullscreen', action='store_true')
+	parser.set_defaults(fullscreen=False)
+	args = parser.parse_args()
+	app = GoogleSlider(fullscreen=args.fullscreen)
 	app.run()

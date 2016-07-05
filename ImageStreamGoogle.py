@@ -29,7 +29,7 @@ class ImageStreamGoogle(ImageStream):
 		self.keywords = [keyword]
 		self.cur_keyword = 0
 		self.query_wait = 2 # seconds
-		self.last_query = time()-self.query_wait
+		self.last_query = time()#-self.query_wait
 		self.start_query()
 
 	def add_keyword(self, keyword):
@@ -90,7 +90,7 @@ class ImageStreamGoogle(ImageStream):
 			return res['items']
 	
 		except Exception, e:
-			print 'Error executing google search for keyword:', self.keyword
+			print 'Error executing google search for keyword:', keyword
 			print 'Error message:', e
 			return None
 

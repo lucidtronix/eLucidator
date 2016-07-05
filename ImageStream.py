@@ -55,7 +55,7 @@ class ImageStream(object):
 
 
 class InternetImage:
-	def __init__(self, img_path, keyword_path, format='pygame'):
+	def __init__(self, img_path, keyword_path, format='cv2'):
 		self.crop = (400, 300)
 		self.img_path = img_path
 		self.keyword_path = keyword_path
@@ -78,6 +78,7 @@ class InternetImage:
 			elif self.format == 'cv2':
 				pic = cv2.imread(self.img_path)
 				self.cv_img = cv2.resize(pic, self.crop, interpolation = cv2.INTER_AREA)
+				self.loaded = True
 		except Exception, e:
 			print 'Image from file Error reading:', self.img_path
 			print 'Error message:', e.message
@@ -88,20 +89,19 @@ class InternetImage:
 			print 'Try to load url image at:', self.img_path
 			ifile = cStringIO.StringIO(urllib.urlopen(self.img_path).read())
 			print 'Try to OPEN url image.'
-			if 'pygame' == self.format:
-				self.pil_img = Image.open(ifile).convert('RGB')
-				print 'Try to RESIZE url image.'
-				self.pil_img = self.pil_img.resize(self.crop, Image.ANTIALIAS)
-				self.img_path = os.path.join(self.keyword_path, os.path.basename(self.img_path))
-				if not os.path.exists(self.img_path):
-					print 'Try to save image at:', self.img_path
-					self.pil_img.save(self.img_path)
-					print 'Saved image at:', self.img_path
-			elif 'cv2' == self.format:
-				pic = cv2.imread(ifile)
-				self.cv_img = cv2.reasize(pic, self.crop, interpolation=cv2.INTER_AREA)
-			else:
-				print 'Unknown format type for Internet Image'
+			self.pil_img = Image.open(ifile).convert('RGB')
+			print 'Try to RESIZE url image.'
+			self.pil_img = self.pil_img.resize(self.crop, Image.ANTIALIAS)
+
+			if 'cv2' == self.format:
+				self.cv_img = np.array(self.pil_img)
+
+			self.img_path = os.path.join(self.keyword_path, os.path.basename(self.img_path))
+			if not os.path.exists(self.img_path):
+				print 'Try to save image at:', self.img_path
+				self.pil_img.save(self.img_path)
+				print 'Saved image at:', self.img_path
+
 			self.loaded = True	
 
 		except Exception, e:
@@ -128,12 +128,15 @@ class InternetImage:
 			return pygame.image.load('./images/dog.jpg')
 
 	def to_array(self):
-		if self.loaded and self.cv_img:
+		if self.loaded and self.cv_img is not None:
 			return self.cv_img
 		elif self.error:
-			return cv2.imread('./images/cat.jpg')
+			imge = cv2.imread('./images/cat.jpg')
+			return cv2.resize(imge, self.crop, interpolation=cv2.INTER_AREA)
 		else:
-			return cv2.imread('./images/dog.jpg')
+			imgl = cv2.imread('./images/dog.jpg')
+			return cv2.resize(imgl, self.crop, interpolation=cv2.INTER_AREA)
+
 
 	def get_size(self):
 		return self.crop
