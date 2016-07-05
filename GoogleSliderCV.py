@@ -115,6 +115,8 @@ class GoogleSlider(LucidApp):
 		self.redraw = True
 		self.row.redraw = True
 
+		return 0
+
 
 class ImageRow:
 	def __init__(self, parent, stream, ts, resolution, wrap=True):
@@ -129,12 +131,15 @@ class ImageRow:
 		self.images = []
 		self.redraw = False
 		self.cur_image = 1
+		self.was_easing = False
 
 
 	def update(self):
 		if len(self.images) > 2:
 			
-			if self.ts.sliding:
+			if self.ts.sliding or self.ts.easing:
+				if self.was_easing and self.ts.sliding:
+					self.last_corner = self.corner
 				self.corner = (self.last_corner[0] + self.ts.delta[0], self.corner[1])
 				self.redraw = True
 				if self.corner[0] + self.image_widths() < self.resolution[0]:
@@ -149,6 +154,11 @@ class ImageRow:
 				self.last_corner = self.corner
 				self.redraw = False
 
+			if self.ts.easing:
+				self.was_easing = True
+			else:
+				self.was_easing = False
+				
 			if self.images[self.next_index()].error:
 				del self.images[self.next_index()]
 

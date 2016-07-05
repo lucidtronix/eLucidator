@@ -4,6 +4,7 @@
 # June 2016
 
 import cv2
+import math
 import pygame
 from time import time
 
@@ -11,11 +12,15 @@ class TouchScreen:
 	def __init__(self):
 		self.start = (0,0)
 		self.delta = (0,0)
+		self.ease = (0.0,0.0)
+		self.ease_start = (0.0,0.0)
+		self.ease_scale = 0.0005
 		self.last_hold = 0
 		self.last_up = 0
 		self.up = 0
 		self.hold = 0
 		self.sliding = False
+		self.easing = False
 		self.double_tap = False
 		self.double_tap_time = 0
 		self.base_graphics = 'cv2'
@@ -42,17 +47,30 @@ class TouchScreen:
 				self.last_hold = self.hold
 				self.hold = time()
 				self.sliding = True
+				self.easing = False
 				self.start = (mx, my)
+
 			self.delta = (mx - self.start[0], my - self.start[1])
 		elif self.sliding:
-			self.delta = (0,0)
 			self.sliding = False
 			self.hold = time()-self.hold
 			self.up = time()
+			self.easing = True
+			self.ease = self.delta
+			self.ease_start = (self.ease_scale*float(self.delta[0])/self.hold, self.ease_scale*float(self.delta[1])/self.hold)
 			if 0.01 < self.last_hold < 0.3 and 0.01 <  self.last_up < 0.3 and 0.01 <  self.hold < 0.3:
 				self.double_tap = True
 				self.double_tap_time = time()
 				self.hold = 0
+		
+		if self.easing:
+			ease_t = time() - self.up
+			self.ease = (self.ease[0] + (self.ease_start[0]*math.exp(-ease_t)), self.ease[1] + (self.ease_start[1]*math.exp(-ease_t)))
+			self.delta = (int(self.ease[0]), int(self.ease[1]))
+			print 'Easing:', self.ease_start, 'delta', self.delta
+			if ease_t > 3.0:
+				self.easing = False
+
 
 		if time()-self.double_tap_time > 0.5:
 			self.double_tap = False
@@ -71,3 +89,5 @@ def mouse_callback_cv(event,x,y,flags,param):
 		param[0].my = y
 
 
+def sigmoid(x):
+  return 1 / (1 + math.exp(-x))
