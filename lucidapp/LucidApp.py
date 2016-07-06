@@ -16,7 +16,7 @@ from time import time
 import urllib, cStringIO
 
 class LucidApp(object):
-	def __init__(self, name, cache_path='./cache/', fullscreen=False, resolution=(400, 300), icon=None, base_graphics='pygame'):
+	def __init__(self, name, cache_path='./cache/', fullscreen=False, resolution=(400, 300), icon=None, base_graphics='cv2'):
 		super(LucidApp, self)
 		self.name = name 
 		self.cache_path = cache_path
@@ -28,12 +28,15 @@ class LucidApp(object):
 		self.icon = icon
 		self.base_graphics = base_graphics
 		self.buttons = []
+		self.input_string = ''
+		print 'lucid app constructor', base_graphics, resolution
+
 		if self.base_graphics == 'pygame':
 			self.pygame_init()
 			self.buttons.append(Button(self, 'exit', (10,10,55,30), (25,250,250), exit_pygame))
 		elif self.base_graphics == 'cv2':
 			self.cv2_init()
-			self.buttons.append(Button(self, 'exit', (10,10,55,30), (25,250,250), exit_cv2))
+			self.buttons.append(Button(self, 'exit', (10,10,55,30), (50,50,50), exit_cv2))
 
 	def __str__(self):
 		return "LucidApp:" +  self.name
@@ -62,6 +65,7 @@ class LucidApp(object):
 			self.canvas = np.zeros(self.resolution_cv, np.uint8)
 			cv2.namedWindow("canvas")		
 		self.fill()
+		print 'cv2 init canvas', self.canvas.shape
 
 	def pygame_init(self):
 		pygame.display.init()
@@ -72,7 +76,9 @@ class LucidApp(object):
 			self.resolution = pygame.display.list_modes()[0]
 			self.surface = pygame.display.set_mode(self.resolution, pygame.FULLSCREEN)
 		else:
-			self.surface = pygame.display.set_mode(self.resolution)		
+			self.surface = pygame.display.set_mode(self.resolution)
+		print 'pygame init surface'
+
 
 	def label(self, text, x, y, size=1, color=(255,255,255), font=cv2.FONT_HERSHEY_SIMPLEX, font_scale=1.0, thickness=1):
 		if self.base_graphics == 'pygame':
@@ -111,6 +117,40 @@ class LucidApp(object):
 				#print 'img shapes:', ix, iw, sx, sy, iwx, ihy, dim, self.canvas.shape, left_corner
 				self.canvas[sy:ihy, sx:iwx] = image.to_array()[:,ix:iw]
 
+	def handle_keys(self):
+		if self.base_graphics == 'pygame':
+			for event in pygame.event.get():
+				if (event.type == pygame.QUIT):
+					pygame.quit()
+					return -1
+				elif (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+					pygame.quit()
+					return -1
+		elif self.base_graphics == 'cv2':
+			char = cv2.waitKey(1) & 0xFF
+			if char > 31 and char < 127:
+				self.input_string += str(chr(char))
+
+			elif char == 27: # Escape
+				cv2.destroyAllWindows()
+				return -1
+			elif char == 8: # Delete
+				if len(self.input_string):
+					self.input_string = self.input_string[:-1]
+			elif char == 10: # Enter/return key
+				print 'Enter/return key'
+			elif char == 9: # Tab
+				print 'tab'
+			elif char == 226: # Right shift
+				print 'right shift'
+
+			elif char == 227: # Left Ctrl
+				print 'left ctrl'
+			elif char == 228: # Right Ctrl
+				print 'right ctrl'
+			elif char != 255:
+				print 'special char:', char
+		return char
 
 
 

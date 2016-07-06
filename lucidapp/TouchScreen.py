@@ -14,7 +14,7 @@ class TouchScreen:
 		self.delta = (0,0)
 		self.ease = (0.0,0.0)
 		self.ease_start = (0.0,0.0)
-		self.ease_scale = 0.0005
+		self.ease_scale = 0.001
 		self.last_hold = 0
 		self.last_up = 0
 		self.up = 0
@@ -49,7 +49,6 @@ class TouchScreen:
 				self.sliding = True
 				self.easing = False
 				self.start = (mx, my)
-
 			self.delta = (mx - self.start[0], my - self.start[1])
 		elif self.sliding:
 			self.sliding = False
@@ -67,10 +66,8 @@ class TouchScreen:
 			ease_t = time() - self.up
 			self.ease = (self.ease[0] + (self.ease_start[0]*math.exp(-ease_t)), self.ease[1] + (self.ease_start[1]*math.exp(-ease_t)))
 			self.delta = (int(self.ease[0]), int(self.ease[1]))
-			print 'Easing:', self.ease_start, 'delta', self.delta
-			if ease_t > 3.0:
+			if ease_t > 3.5:
 				self.easing = False
-
 
 		if time()-self.double_tap_time > 0.5:
 			self.double_tap = False

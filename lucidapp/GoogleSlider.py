@@ -32,7 +32,7 @@ class GoogleSlider(LucidApp):
 		self.stream = ImageStreamGoogle((480, 640, 3), "google", cache_path, 'pygame', self.keywords[self.cur_keyword], 5, 0)
 		self.row = ImageRow(self, self.stream, self.ts, self.resolution)
 		self.redraw = True
-		self.search_string = ""
+		
 	def __str__(self):
 		return super(ImageSlider, self).__str__() + 'Playing:' + str(self.playing)
 
@@ -54,16 +54,16 @@ class GoogleSlider(LucidApp):
 		elif self.base_graphics == 'cv2':
 			char = cv2.waitKey(1) & 0xFF
 			if char > 31 and char < 127:
-				self.search_string += str(chr(char))
+				self.input_string += str(chr(char))
 
 			elif char == 27: # Escape
 				cv2.destroyAllWindows()
 				return -1
 			elif char == 8: # Delete
-				if len(self.search_string):
-					self.search_string = self.search_string[:-1]
+				if len(self.input_string):
+					self.input_string = self.input_string[:-1]
 			elif char == 10: # Enter/return key
-				if len(search_string):
+				if len(input_string):
 					self.stream.add_keyword(self.keywords[self.cur_keyword])
 					self.stream.start_query()
 			elif char == 9: # Tab
@@ -158,7 +158,7 @@ class ImageRow:
 				self.was_easing = True
 			else:
 				self.was_easing = False
-				
+
 			if self.images[self.next_index()].error:
 				del self.images[self.next_index()]
 
@@ -178,28 +178,14 @@ class ImageRow:
 		return (self.cur_image-1) % len(self.images)
 
 	def next_index(self):
-		return (self.cur_image+1) % len(self.images)
-
-	def display_pygame(self):
-		pass
-		# if self.redraw and len(self.images) > 2:
-		# 	self.surface.fill(0)
-		# 	self.surface.blit(self.images[self.cur_image].to_surface(), self.corner)
-		# 	if self.corner[0] < 0:
-		# 		size = self.images[self.cur_image].to_surface().get_size()
-		# 		rp = (self.corner[0] + size[0] + self.margin, self.corner[1])
-		# 		self.surface.blit(self.images[self.next_index()].to_surface(), rp)
-		# 	else:
-		# 		size = self.images[self.prev_index()].get_size()
-		# 		lp = (self.corner[0] - (size[0]+self.margin), self.corner[1])
-		# 		self.surface.blit(self.images[self.prev_index()].to_surface(), lp)			
+		return (self.cur_image+1) % len(self.images)		
 
 	def display(self):
 		if self.redraw and len(self.images) > 2:
 			self.parent.fill()
 			self.parent.show_image(self.images[self.cur_image], self.corner)
 			if self.corner[0] < 0:
-				size = self.images[self.cur_image].to_surface().get_size()
+				size = self.images[self.cur_image].get_size()
 				rp = (self.corner[0] + size[0] + self.margin, self.corner[1])
 				self.parent.show_image(self.images[self.next_index()], rp)
 			else:

@@ -19,7 +19,7 @@ from LucidApp import LucidApp, Button
 from ImageStreamDir import ImageStreamDir
 from ImageStreamGoogle import ImageStreamGoogle
 
-class GoogleSlider(LucidApp):
+class GoogleSliderDeprecated(LucidApp):
 	def __init__(self, cache_path='./cache/', fullscreen=False, resolution=(500, 400), icon=None, base_graphics='pygame'):
 		super(GoogleSlider, self).__init__('GoogleSlider', cache_path, fullscreen, resolution, icon, base_graphics)
 		self.playing = True
@@ -154,5 +154,5 @@ if __name__ == '__main__':
 	parser.add_argument('--fullscreen', dest='fullscreen', action='store_true')
 	parser.set_defaults(fullscreen=False)
 	args = parser.parse_args()
-	app = GoogleSlider(fullscreen=args.fullscreen)
+	app = GoogleSliderDeprecated(fullscreen=args.fullscreen)
 	app.run()
