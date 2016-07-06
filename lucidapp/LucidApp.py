@@ -33,10 +33,10 @@ class LucidApp(object):
 
 		if self.base_graphics == 'pygame':
 			self.pygame_init()
-			self.buttons.append(Button(self, 'exit', (10,10,55,30), (25,250,250), exit_pygame))
+			self.buttons.append(Button(self, 'exit', (10,10,75,30), (25,250,250), exit_pygame))
 		elif self.base_graphics == 'cv2':
 			self.cv2_init()
-			self.buttons.append(Button(self, 'exit', (10,10,55,30), (50,50,50), exit_cv2))
+			self.buttons.append(Button(self, 'exit', (10,10,75,40), (50,50,50), exit_cv2))
 
 	def __str__(self):
 		return "LucidApp:" +  self.name
@@ -113,7 +113,7 @@ class LucidApp(object):
 				sx = max(0,left_corner[0])
 				sy = max(0,left_corner[1])
 				iwx = min(self.canvas.shape[1], left_corner[0] + dim[1])
-				ihy = min(self.canvas.shape[0],left_corner[1] + dim[0])
+				ihy = min(self.canvas.shape[0], left_corner[1] + dim[0])
 				#print 'img shapes:', ix, iw, sx, sy, iwx, ihy, dim, self.canvas.shape, left_corner
 				self.canvas[sy:ihy, sx:iwx] = image.to_array()[:,ix:iw]
 
@@ -161,7 +161,7 @@ class Button:
 		self.name = name
 		self.rect = rect
 		self.color = color
-		self.highlight = (0,255,200)
+		self.highlight = (40,205,150)
 		self.cur_color = self.color
 		self.callback = callback
 		self.icon = icon
@@ -174,13 +174,14 @@ class Button:
 		elif self.app.base_graphics == 'cv2':
 			pt2 = (self.rect[0] + self.rect[2], self.rect[1] + self.rect[3])
 			cv2.rectangle(self.app.canvas, (self.rect[0], self.rect[1]), pt2, self.cur_color, -1)
-			self.app.label(self.name, self.rect[0]+6, self.rect[1]+(self.rect[3]/2) )
+			self.app.label(self.name, self.rect[0]+4, self.rect[1]+(self.rect[3] - 10) )
 
 
 	def over(self, x, y):
 		is_over = self.rect[0] < x < self.rect[0]+self.rect[2] and self.rect[1] < y < self.rect[1]+self.rect[3]
 		if is_over:
 			self.cur_color = self.highlight
+			print 'is over:', self.name
 		else:
 			self.cur_color = self.color
 		return is_over

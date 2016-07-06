@@ -39,7 +39,6 @@ class TouchScreen:
 			mx = self.mx
 			my = self.my
 			b1 = self.b1
-
 		if b1:
 			self.double_tap = False
 			if not self.sliding:
@@ -61,17 +60,14 @@ class TouchScreen:
 				self.double_tap = True
 				self.double_tap_time = time()
 				self.hold = 0
-		
 		if self.easing:
 			ease_t = time() - self.up
 			self.ease = (self.ease[0] + (self.ease_start[0]*math.exp(-ease_t)), self.ease[1] + (self.ease_start[1]*math.exp(-ease_t)))
 			self.delta = (int(self.ease[0]), int(self.ease[1]))
 			if ease_t > 3.5:
 				self.easing = False
-
 		if time()-self.double_tap_time > 0.5:
 			self.double_tap = False
-
 
 # mouse callback function
 def mouse_callback_cv(event,x,y,flags,param):

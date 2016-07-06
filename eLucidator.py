@@ -12,12 +12,15 @@ import lucidapp
 from time import time
 
 class eLucidator(lucidapp.LucidApp):
-	def __init__(self, apps, cache_path='./cache/', fullscreen=False, resolution=(500, 400), icon=None, base_graphics='cv2'):
+	def __init__(self, apps, ts, cache_path='./cache/', fullscreen=False, resolution=(500, 400), icon=None, base_graphics='cv2'):
 		super(eLucidator, self).__init__('eLucidator', cache_path, fullscreen, resolution, icon, base_graphics)#, cache_path='./cache/', fullscreen=fullscreen, resolution=resolution, icon=None, base_graphics=base_graphics)
 		self.apps = apps
+		self.init_app_buttons()
 		self.active_app = None
-		self.ts = lucidapp.TouchScreen()
+
+		self.ts = ts
 		self.redraw = True
+		
 
 	def __str__(self):
 		return super(eLucidator, self).__str__() + 'eLucidator'
@@ -28,16 +31,35 @@ class eLucidator(lucidapp.LucidApp):
 	def close(self):
 		pass
 
+	def init_app_buttons(self):
+		bx = 10
+		by = 70
+		bw = 200
+		bh = 40
+
+		for app in self.apps:
+			self.buttons.append(lucidapp.Button(self, str(app), (bx,by,bw,bh), (150,150,150), self.set_active_app))
+			by += 55
+
+	def set_active_app(self):
+		self.active_app = self.apps[0]
+		return 0
+
 	def run(self):
 		quit = False
 		while not quit:
 			if self.active_app:
-				self.active_app.run()
+				ret = self.active_app.run()
+				if ret < 0:
+					self.active_app = None
 			else:
 
 				self.ts.update()
-				self.handle_keys()
 
+				ret = self.handle_keys()
+				if ret < 0:
+					quit = True
+				
 				for b in self.buttons:
 					if b.over(self.ts.mx, self.ts.my) and self.ts.double_tap and time()-b.last_press > 0.5:
 						ret = b.press()
@@ -49,7 +71,6 @@ class eLucidator(lucidapp.LucidApp):
 
 				if self.redraw:
 					#self.fill()
-					self.label('hello', 300, 12)
 					self.draw()
 					#self.redraw = False
 
@@ -61,7 +82,9 @@ if __name__ == '__main__':
 	args = parser.parse_args()
 	
 	apps = []
-	apps.append(lucidapp.GoogleSlider(fullscreen=args.fullscreen))
+	cv2.namedWindow("canvas")
+	ts = lucidapp.TouchScreen()
+	apps.append(lucidapp.GoogleSlider(ts=ts, fullscreen=args.fullscreen))
 
-	lucidator = eLucidator(apps, fullscreen=args.fullscreen)
+	lucidator = eLucidator(apps, ts=ts, fullscreen=args.fullscreen)
 	lucidator.run()
