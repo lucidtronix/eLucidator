@@ -132,8 +132,7 @@ class LucidApp(object):
 				self.input_string += str(chr(char))
 
 			elif char == 27: # Escape
-				cv2.destroyAllWindows()
-				return -1
+				return 0
 			elif char == 8: # Delete
 				if len(self.input_string):
 					self.input_string = self.input_string[:-1]
@@ -150,7 +149,7 @@ class LucidApp(object):
 				print 'right ctrl'
 			elif char != 255:
 				print 'special char:', char
-		return char
+			return char
 
 
 
@@ -181,7 +180,6 @@ class Button:
 		is_over = self.rect[0] < x < self.rect[0]+self.rect[2] and self.rect[1] < y < self.rect[1]+self.rect[3]
 		if is_over:
 			self.cur_color = self.highlight
-			print 'is over:', self.name
 		else:
 			self.cur_color = self.color
 		return is_over

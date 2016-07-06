@@ -18,16 +18,16 @@ from ImageStreamDir import ImageStreamDir
 from ImageStreamGoogle import ImageStreamGoogle
 
 class ImageSlider(LucidApp):
-	def __init__(self, cache_path='./cache/', fullscreen=False, resolution=(500, 400), icon=None, base_graphics='pygame'):
+	def __init__(self, ts, cache_path='./cache/', fullscreen=False, resolution=(500, 400), icon=None, base_graphics='cv2'):
 		super(ImageSlider, self).__init__('ImageSlider', cache_path, fullscreen, resolution, icon, base_graphics)
 		self.playing = True
 		#self.stream = ImageStreamGoogle((480, 640, 3), "google", cache_path, 'pygame', 'fractals', 5, 0)#ImageStreamDir()
 		self.stream = ImageStreamDir()
-		self.ts = TouchScreen()
-		self.row = ImageRow(self.stream, self.ts, self.surface, self.resolution, (10, 50))
+		self.ts = ts
+		self.row = ImageRow(self, self.stream, self.ts, self.resolution)
 		#self.buttons.append()
 	def __str__(self):
-		return super(ImageSlider, self).__str__() + 'Playing:' + str(self.playing)
+		return 'ImageSlider'
 
 	def open(self):
 		pass
@@ -45,61 +45,68 @@ class ImageSlider(LucidApp):
 			self.row.update()
 			self.row.display()
 
-			for event in pygame.event.get():
-				if (event.type == pygame.QUIT):
-					pygame.quit()
-					return 0
-				elif (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
-					pygame.quit()
-					return 0
 
+			ret = self.handle_keys()
+			if ret <= 0:
+				return ret
 
 			for b in self.buttons:
-				mx, my = pygame.mouse.get_pos()
-				b.show()
-				if b.over(mx, my) and self.ts.double_tap and time()-b.last_press > 0.5:
-					if b.press() < 0:
-						return
+				if b.over(self.ts.mx, self.ts.my) and self.ts.double_tap and time()-b.last_press > 0.5:
+					ret = b.press() 
+					if ret < 0:
+						return ret
 					self.ts.double_tap = False
-
+				b.show()
+			self.draw()
 
 
 class ImageRow:
-	def __init__(self, stream, ts, surface, resolution, corner, wrap=True):
+	def __init__(self, parent, stream, ts, resolution, wrap=True):
+		self.parent = parent
 		self.stream = stream
 		self.ts = ts
-		self.surface = surface
 		self.resolution = resolution
 		self.wrap = wrap
-		self.margin = corner[0]
-		self.corner = corner
-		self.last_corner = (self.margin, self.corner[1])
+		self.margin = 10
+		self.corner = (self.margin, 5*self.margin)
+		self.last_corner = (self.margin, 5*self.margin)
 		self.images = []
 		self.redraw = False
 		self.cur_image = 1
-
+		self.was_easing = False
 
 
 	def update(self):
 		if len(self.images) > 2:
-			if self.ts.sliding:
-				self.corner = (self.last_corner[0]+self.ts.delta[0], self.last_corner[1]+self.ts.delta[1])
+			
+			if self.ts.sliding or self.ts.easing:
+				if self.was_easing and self.ts.sliding:
+					self.last_corner = self.corner
+				self.corner = (self.last_corner[0] + self.ts.delta[0], self.corner[1])
 				self.redraw = True
 				if self.corner[0] + self.image_widths() < self.resolution[0]:
-					self.cur_image = (self.cur_image+1)%self.stream.size()
+					self.cur_image = (self.cur_image+1)%len(self.images)
 					self.corner = (self.margin, self.corner[1])
 					self.last_corner = (self.last_corner[0] + self.images[self.prev_index()].get_size()[0], self.corner[1])
 				elif self.corner[0] > self.images[self.cur_image].get_size()[0]+self.margin:
 					self.corner = (self.corner[0]-self.images[self.cur_image].get_size()[0], self.corner[1])
 					self.last_corner = (self.last_corner[0] -self.images[self.cur_image].get_size()[0], self.corner[1])
-					self.cur_image = (self.cur_image-1)%self.stream.size()
+					self.cur_image = (self.cur_image-1)%len(self.images)
 			else:
 				self.last_corner = self.corner
 				self.redraw = False
-		elif self.stream.size() > 2:
-			print ' Adding images from stream...'
-			for img in self.stream.images:
-				self.images.append(img.to_surface())
+
+			if self.ts.easing:
+				self.was_easing = True
+			else:
+				self.was_easing = False
+
+			if self.images[self.next_index()].error:
+				del self.images[self.next_index()]
+
+		if self.stream.size() > len(self.images):
+			self.images.append(self.stream.next())
+			print ' Adding image from stream...',  self.images[len(self.images)-1].img_path
 
 
 	def image_widths(self):
@@ -109,26 +116,24 @@ class ImageRow:
 			return self.images[self.cur_image].get_size()[0] + self.images[self.prev_index()].get_size()[0] + (2*self.margin)
 
 
-
 	def prev_index(self):
-		return (self.cur_image-1) % self.stream.size()
+		return (self.cur_image-1) % len(self.images)
 
 	def next_index(self):
-		return (self.cur_image+1) % self.stream.size()
+		return (self.cur_image+1) % len(self.images)		
 
 	def display(self):
 		if self.redraw and len(self.images) > 2:
-			self.surface.fill(0)
-			self.surface.blit(self.images[self.cur_image], self.corner)
+			self.parent.fill()
+			self.parent.show_image(self.images[self.cur_image], self.corner)
 			if self.corner[0] < 0:
 				size = self.images[self.cur_image].get_size()
 				rp = (self.corner[0] + size[0] + self.margin, self.corner[1])
-				self.surface.blit(self.images[self.next_index()], rp)
+				self.parent.show_image(self.images[self.next_index()], rp)
 			else:
 				size = self.images[self.prev_index()].get_size()
 				lp = (self.corner[0] - (size[0]+self.margin), self.corner[1])
-				self.surface.blit(self.images[self.prev_index()], lp)			
-			pygame.display.update()
+				self.parent.show_image(self.images[self.prev_index()], lp)	
 
 
 if __name__ == '__main__':

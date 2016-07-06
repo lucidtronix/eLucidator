@@ -59,7 +59,6 @@ class GoogleSlider(LucidApp):
 			if char > 31 and char < 127:
 				self.input_string += str(chr(char))
 			elif char == 27: # Escape
-				cv2.destroyAllWindows()
 				return -1
 			elif char == 8: # Delete
 				if len(self.input_string):
@@ -96,7 +95,7 @@ class GoogleSlider(LucidApp):
 			ret = self.handle_keys()
 			if ret < 0:
 				print 'Quit google slider on keys'
-				return ret
+				return 0
 
 			for b in self.buttons:
 				is_over = b.over(self.ts.mx, self.ts.my)
@@ -110,7 +109,6 @@ class GoogleSlider(LucidApp):
 
 
 			if self.redraw or self.row.redraw:
-				print ' drawing goog slider'
 				self.label(self.keywords[self.cur_keyword], 205, 30)
 				self.draw()
 

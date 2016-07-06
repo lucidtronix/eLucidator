@@ -16,7 +16,6 @@ class eLucidator(lucidapp.LucidApp):
 		super(eLucidator, self).__init__('eLucidator', cache_path, fullscreen, resolution, icon, base_graphics)#, cache_path='./cache/', fullscreen=fullscreen, resolution=resolution, icon=None, base_graphics=base_graphics)
 		self.apps = apps
 		self.init_app_buttons()
-		self.active_app = None
 
 		self.ts = ts
 		self.redraw = True
@@ -38,26 +37,19 @@ class eLucidator(lucidapp.LucidApp):
 		bh = 40
 
 		for app in self.apps:
-			self.buttons.append(lucidapp.Button(self, str(app), (bx,by,bw,bh), (150,150,150), self.set_active_app))
+			self.buttons.append(lucidapp.Button(self, str(app), (bx,by,bw,bh), (150,150,150), app.run))
 			by += 55
 
-	def set_active_app(self):
-		self.active_app = self.apps[0]
-		return 0
+
 
 	def run(self):
 		quit = False
 		while not quit:
-			if self.active_app:
-				ret = self.active_app.run()
-				if ret < 0:
-					self.active_app = None
-			else:
 
 				self.ts.update()
 
 				ret = self.handle_keys()
-				if ret < 0:
+				if ret <= 0:
 					quit = True
 				
 				for b in self.buttons:
@@ -74,6 +66,8 @@ class eLucidator(lucidapp.LucidApp):
 					self.draw()
 					#self.redraw = False
 
+		cv2.destroyAllWindows()
+
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
@@ -85,6 +79,7 @@ if __name__ == '__main__':
 	cv2.namedWindow("canvas")
 	ts = lucidapp.TouchScreen()
 	apps.append(lucidapp.GoogleSlider(ts=ts, fullscreen=args.fullscreen))
+	apps.append(lucidapp.ImageSlider(ts=ts, fullscreen=args.fullscreen))
 
 	lucidator = eLucidator(apps, ts=ts, fullscreen=args.fullscreen)
 	lucidator.run()
