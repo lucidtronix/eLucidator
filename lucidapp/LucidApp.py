@@ -85,15 +85,16 @@ class LucidApp(object):
 			my_label = self.py_font.render(text, size, color)
 			self.surface.blit(my_label, (x, y))
 		elif self.base_graphics == 'cv2':
-			cv2.putText(self.canvas, text,(x, y), font, font_scale, color, thickness)			
+			cv2.putText(self.canvas, text, (x, y), font, font_scale, color, thickness)			
 
 	def fill(self, color=(0,0,0)):
 		if self.base_graphics == 'pygame':
 			self.surface.fill(color)
 		elif self.base_graphics == 'cv2':
-			self.canvas[0].fill(color[0])
-			self.canvas[1].fill(color[1])
-			self.canvas[2].fill(color[2])
+			self.canvas = np.zeros(self.resolution_cv, np.uint8)
+			#self.canvas[0].fill(color[0])
+			#self.canvas[1].fill(color[1])
+			#self.canvas[2].fill(color[2])
 
 	def show_image(self, image, left_corner=(0,0)):
 		if self.base_graphics == 'pygame':

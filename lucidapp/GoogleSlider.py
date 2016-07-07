@@ -95,6 +95,12 @@ class GoogleSlider(LucidApp):
 				print 'Quit google slider on keys'
 				return 0
 
+
+
+			if self.redraw or self.row.redraw:
+				self.fill()
+				self.label(self.keywords[self.cur_keyword], 205, 30)
+
 			for b in self.buttons:
 				is_over = b.over(self.ts.mx, self.ts.my)
 				if is_over and self.ts.double_tap and time()-b.last_press > 0.5:
@@ -105,10 +111,7 @@ class GoogleSlider(LucidApp):
 					self.ts.double_tap = False
 				b.show()
 
-
 			if self.redraw or self.row.redraw:
-				self.fill()
-				self.label(self.keywords[self.cur_keyword], 205, 30)
 				self.draw()
 
 		return 0
