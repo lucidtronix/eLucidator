@@ -25,7 +25,6 @@ class GoogleSlider(LucidApp):
 		super(GoogleSlider, self).__init__('GoogleSlider', cache_path, fullscreen, resolution, icon, base_graphics)
 		self.ts = ts
 		self.playing = True
-		#self.ts = TouchScreen()
 		self.buttons.append(Button(self, 'more', (100,10,85,40), (50,50,50), self.get_more_images))
 		self.keywords = ['fractals', 'lucidtronix', 'trending', 'beauty', 'sunset', 'caravaggio', 'chiaroscuro', 
 						'evolution', 'ocean', 'samwell freeman', 'neural network', 'achievement', 'trees', 'palms',
@@ -34,7 +33,6 @@ class GoogleSlider(LucidApp):
 		self.stream = ImageStreamGoogle((480, 640, 3), "google", cache_path, 'cv2', self.keywords[self.cur_keyword], 5, 0)
 		self.row = ImageRow(self, self.stream, self.ts, self.resolution)
 		self.redraw = True
-		print 'Google slider inited'
 
 	def __str__(self):
 		return 'GoogleSlider'
@@ -109,6 +107,7 @@ class GoogleSlider(LucidApp):
 
 
 			if self.redraw or self.row.redraw:
+				self.fill()
 				self.label(self.keywords[self.cur_keyword], 205, 30)
 				self.draw()
 
