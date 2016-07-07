@@ -76,10 +76,18 @@ if __name__ == '__main__':
 	args = parser.parse_args()
 	
 	apps = []
-	cv2.namedWindow("canvas")
+
+	if args.fullscreen:
+		cv2.namedWindow("canvas", cv2.WINDOW_NORMAL)          
+		cv2.setWindowProperty("canvas", cv2.WND_PROP_FULLSCREEN, 1)
+	else:
+		cv2.namedWindow("canvas")
+
 	ts = lucidapp.TouchScreen()
 	apps.append(lucidapp.GoogleSlider(ts=ts, fullscreen=args.fullscreen))
 	apps.append(lucidapp.ImageSlider(ts=ts, fullscreen=args.fullscreen))
 
 	lucidator = eLucidator(apps, ts=ts, fullscreen=args.fullscreen)
 	lucidator.run()
+
+	cv2.destroyAllWindows()

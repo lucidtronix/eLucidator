@@ -59,8 +59,8 @@ class LucidApp(object):
 	def cv2_init(self):
 		if self.fullscreen:
 			self.canvas = np.zeros(self.resolution_cv, np.uint8)
-			cv2.namedWindow("canvas", cv2.WND_PROP_FULLSCREEN)          
-			cv2.setWindowProperty("canvas", cv2.WND_PROP_FULLSCREEN, cv2.CV_WINDOW_FULLSCREEN)
+			cv2.namedWindow("canvas", cv2.WINDOW_NORMAL)          
+			cv2.setWindowProperty("canvas", cv2.WND_PROP_FULLSCREEN, 1)
 		else:
 			self.canvas = np.zeros(self.resolution_cv, np.uint8)
 			cv2.namedWindow("canvas")		
