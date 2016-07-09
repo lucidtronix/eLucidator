@@ -1,5 +1,5 @@
-# LucidApp.py
-# Base Class for LucidTronix eLucidator Applications
+# ImageSlider.py
+# ImageSlider Class for LucidTronix eLucidator Applications
 # Samwell Freeman
 # June 2016
 
