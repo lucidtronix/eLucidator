@@ -21,9 +21,12 @@ from ImageStreamGoogle import ImageStreamGoogle
 
 class GoogleSlider(LucidApp):
 
-	def __init__(self, ts, cache_path='./cache/', fullscreen=False, resolution=(500, 400), icon=None, base_graphics='cv2'):
+	def __init__(self, ts=None, cache_path='./cache/', fullscreen=False, resolution=(500, 400), icon=None, base_graphics='cv2'):
 		super(GoogleSlider, self).__init__('GoogleSlider', cache_path, fullscreen, resolution, icon, base_graphics)
-		self.ts = ts
+		if ts:
+			self.ts = ts
+		else:
+			self.ts = TouchScreen()
 		self.playing = True
 		self.buttons.append(Button(self, 'more', (100,10,85,40), (50,50,50), self.get_more_images))
 		self.keywords = ['fractals', 'lucidtronix', 'trending', 'beauty', 'sunset', 'caravaggio', 'chiaroscuro', 
@@ -85,21 +88,19 @@ class GoogleSlider(LucidApp):
 
 		print ' Start google slider run'
 		quit = False
+
 		while not quit:
 			self.ts.update()
 			self.row.update()
-			self.row.display()
 
 			ret = self.handle_keys()
 			if ret < 0:
 				print 'Quit google slider on keys'
 				return 0
 
-
-
-			if self.redraw or self.row.redraw:
-				self.fill()
-				self.label(self.keywords[self.cur_keyword], 205, 30)
+			self.fill()
+			self.row.display()	
+			self.label(self.keywords[self.cur_keyword], 205, 40)
 
 			for b in self.buttons:
 				is_over = b.over(self.ts.mx, self.ts.my)
@@ -111,8 +112,7 @@ class GoogleSlider(LucidApp):
 					self.ts.double_tap = False
 				b.show()
 
-			if self.redraw or self.row.redraw:
-				self.draw()
+			self.draw()
 
 		return 0
 
@@ -121,7 +121,7 @@ class GoogleSlider(LucidApp):
 		self.stream.add_keyword(self.keywords[self.cur_keyword])
 		self.stream.start_query()
 		
-		self.fill()
+		#self.fill()
 		self.redraw = True
 		self.row.redraw = True
 
@@ -136,8 +136,8 @@ class ImageRow:
 		self.resolution = resolution
 		self.wrap = wrap
 		self.margin = 10
-		self.corner = (self.margin, 5*self.margin)
-		self.last_corner = (self.margin, 5*self.margin)
+		self.corner = (self.margin, 7*self.margin)
+		self.last_corner = (self.margin, 7*self.margin)
 		self.images = []
 		self.redraw = False
 		self.cur_image = 1
@@ -191,7 +191,7 @@ class ImageRow:
 		return (self.cur_image+1) % len(self.images)		
 
 	def display(self):
-		if self.redraw and len(self.images) > 2:
+		if len(self.images) > 2:
 			self.parent.fill()
 			self.parent.show_image(self.images[self.cur_image], self.corner)
 			if self.corner[0] < 0:
@@ -202,8 +202,6 @@ class ImageRow:
 				size = self.images[self.prev_index()].get_size()
 				lp = (self.corner[0] - (size[0]+self.margin), self.corner[1])
 				self.parent.show_image(self.images[self.prev_index()], lp)	
-
-
 
 
 if __name__ == '__main__':

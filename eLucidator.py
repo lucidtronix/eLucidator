@@ -86,7 +86,7 @@ if __name__ == '__main__':
 	ts = lucidapp.TouchScreen()
 	apps.append(lucidapp.GoogleSlider(ts=ts, fullscreen=args.fullscreen))
 	apps.append(lucidapp.ImageSlider(ts=ts, fullscreen=args.fullscreen))
-	apps.append(lucidapp.FaceDetector(ts=ts, fullscreen=args.fullscreen))
+#	apps.append(lucidapp.FaceDetector(ts=ts, fullscreen=args.fullscreen))
 	lucidator = eLucidator(apps, ts=ts, fullscreen=args.fullscreen)
 	lucidator.run()
 
