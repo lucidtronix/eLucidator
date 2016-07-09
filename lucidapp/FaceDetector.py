@@ -31,7 +31,7 @@ class FaceDetector(LucidApp):
 		self.camera = PiCamera()
 		self.camera.resolution = (320, 240)
 		self.camera.framerate = 32
-		self.rawCapture = PiRGBArray(camera, size=(320, 240))
+		self.rawCapture = PiRGBArray(self.camera, size=(320, 240))
 		self.faceCascade = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')
 
         # allow the camera to warmup
@@ -47,10 +47,10 @@ class FaceDetector(LucidApp):
 
 
 			# capture frames from the camera
-			for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+			for frame in self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True):
 				image = frame.array
 				gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-				faces = faceCascade.detectMultiScale(gray,scaleFactor=1.1,minNeighbors=5,minSize=(30, 30),flags=cv2.CASCADE_SCALE_IMAGE)
+				faces = self.faceCascade.detectMultiScale(gray,scaleFactor=1.1,minNeighbors=5,minSize=(30, 30),flags=cv2.CASCADE_SCALE_IMAGE)
 				
 				# Draw a rectangle around the faces
 				for (x, y, w, h) in faces:
@@ -64,11 +64,12 @@ class FaceDetector(LucidApp):
 						self.ts.double_tap = False
 					b.show()
 
-				self.show_image(image)
+				self.canvas[0:240,0:320] = image
+				#self.show_image(image)
 				self.draw()
 
 				# clear the stream in preparation for the next frame
-				rawCapture.truncate(0)
+				self.rawCapture.truncate(0)
 
 				ret = self.handle_keys()
 				if ret <= 0:
