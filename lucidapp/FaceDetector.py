@@ -34,7 +34,7 @@ class FaceDetector(LucidApp):
 		self.rawCapture = PiRGBArray(self.camera, size=(320, 240))
 		self.faceCascade = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')
 
-        # allow the camera to warmup
+		# allow the camera to warmup
 		sleep(0.2)
 
 	def __str__(self):
