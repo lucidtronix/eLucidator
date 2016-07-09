@@ -20,11 +20,14 @@ from ImageStreamDir import ImageStreamDir
 from ImageStreamGoogle import ImageStreamGoogle
 
 class FaceDetector(LucidApp):
-	def __init__(self, ts, cache_path='./cache/', fullscreen=False, resolution=(500, 400), icon=None, base_graphics='cv2'):
+	def __init__(self, ts=None, cache_path='./cache/', fullscreen=False, resolution=(500, 400), icon=None, base_graphics='cv2'):
 		super(FaceDetector, self).__init__('FaceDetector', cache_path, fullscreen, resolution, icon, base_graphics)
 		self.playing = True
 		self.stream = ImageStreamDir()
-		self.ts = ts
+		if ts:
+			self.ts = ts
+		else:
+			self.ts = TouchScreen()
 		self.camera = PiCamera()
 		self.camera.resolution = (320, 240)
 		self.camera.framerate = 32
@@ -66,7 +69,7 @@ class FaceDetector(LucidApp):
 
 				# clear the stream in preparation for the next frame
 				rawCapture.truncate(0)
-				
+
 				ret = self.handle_keys()
 				if ret <= 0:
 					return ret
