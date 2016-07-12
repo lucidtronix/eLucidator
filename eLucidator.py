@@ -41,7 +41,6 @@ class eLucidator(lucidapp.LucidApp):
 			by += 55
 
 
-
 	def run(self):
 		quit = False
 		while not quit:
@@ -60,11 +59,13 @@ class eLucidator(lucidapp.LucidApp):
 
 						self.ts.double_tap = False
 					b.show()
-
-				if self.redraw:
-					#self.fill()
-					self.draw()
-					#self.redraw = False
+				ax = 220
+				ay = 80
+				for app in self.apps:
+					self.show_image_cv(app.icon, (ax, ay))
+					ay += 55
+				
+				self.draw()
 
 		cv2.destroyAllWindows()
 
@@ -86,7 +87,10 @@ if __name__ == '__main__':
 	ts = lucidapp.TouchScreen()
 	apps.append(lucidapp.GoogleSlider(ts=ts, fullscreen=args.fullscreen))
 	apps.append(lucidapp.ImageSlider(ts=ts, fullscreen=args.fullscreen))
-	apps.append(lucidapp.FaceDetector(ts=ts, fullscreen=args.fullscreen))
+	try:
+		apps.append(lucidapp.FaceDetector(ts=ts, fullscreen=args.fullscreen))
+	except:
+		print 'Could not load face detector'
 	lucidator = eLucidator(apps, ts=ts, fullscreen=args.fullscreen)
 	lucidator.run()
 

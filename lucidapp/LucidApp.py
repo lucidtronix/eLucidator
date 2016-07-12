@@ -25,8 +25,11 @@ class LucidApp(object):
 		self.resolution = resolution
 		self.resolution_cv = (resolution[1], resolution[0], 3)
 		self.playing = True
-		self.icon = icon
 		self.base_graphics = base_graphics
+		if icon:
+			self.icon = icon
+		else:
+			self.icon = self.get_default_icon()
 		self.buttons = []
 		self.input_string = ''
 		print 'lucid app constructor', base_graphics, resolution
@@ -79,6 +82,11 @@ class LucidApp(object):
 			self.surface = pygame.display.set_mode(self.resolution)
 		print 'pygame init surface'
 
+	def get_default_icon(self):
+		if self.base_graphics == 'pygame':
+			return pygame.image.load('./images/default_icon.png')
+		elif self.base_graphics == 'cv2':
+			return cv2.imread('./images/default_icon.png')
 
 	def label(self, text, x, y, size=1, color=(255,255,255), font=cv2.FONT_HERSHEY_SIMPLEX, font_scale=1.0, thickness=1):
 		if self.base_graphics == 'pygame':
@@ -117,6 +125,31 @@ class LucidApp(object):
 				ihy = min(self.canvas.shape[0], left_corner[1] + dim[0])
 				#print 'img shapes:', ix, iw, sx, sy, iwx, ihy, dim, self.canvas.shape, left_corner
 				self.canvas[sy:ihy, sx:iwx] = image.to_array()[:,ix:iw]
+
+	def show_image_cv(self, image_cv, left_corner):
+		dim = image_cv.shape
+		if -1*left_corner[0] < dim[1]: 
+			ix = 0
+			iw = dim[1]
+			if left_corner[0] < 0:
+				ix = -left_corner[0]
+			if 	ix+left_corner[0]+dim[1] > self.canvas.shape[1]:
+				iw = self.canvas.shape[1] - (left_corner[0]+ix)
+
+			assert ix >= 0 and iw <= dim[1]
+
+			sx = max(0,left_corner[0])
+			sy = max(0,left_corner[1])
+			iwx = min(self.canvas.shape[1], left_corner[0] + dim[1])
+			ihy = min(self.canvas.shape[0], left_corner[1] + dim[0])
+			#print 'img shapes:', ix, iw, sx, sy, iwx, ihy, dim, self.canvas.shape, left_corner
+			self.canvas[sy:ihy, sx:iwx] = image_cv[:,ix:iw]		
+
+	def show_image_cv2(self, image_cv, cx_idx, cy_idx, ix_idx=None, iy_idx=None):
+		if ix_idx and iy_idx:
+			self.canvas[cy_idx[0]:cy_idx[1], cx_idx[0]:cx_idx[1]] = image_cv[iy_idx[0]:iy_idx[1],ix_idx[0]:ix_idx[1]]
+		else:
+			self.canvas[cy_idx[0]:cy_idx[1], cx_idx[0]:cx_idx[1]] = image_cv
 
 	def handle_keys(self):
 		if self.base_graphics == 'pygame':
