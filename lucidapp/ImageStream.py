@@ -95,6 +95,7 @@ class InternetImage:
 
 			if 'cv2' == self.format:
 				self.cv_img = np.array(self.pil_img)
+				self.cv_img = cv2.cvtColor(self.cv_img, cv2.COLOR_RGB2BGR)
 
 			self.img_path = os.path.join(self.keyword_path, os.path.basename(self.img_path))
 			if not os.path.exists(self.img_path):
