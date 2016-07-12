@@ -21,12 +21,13 @@ sudo apt-get update \
 && sudo make install \
 && sudo ldconfig \
 && cp config_touchscreen.txt /boot/config.txt \
-&& amixer cset numid=3 1 # set audio to headphone jack
+&& amixer cset numid=3 1 \
+# set audio to headphone jack
 && mkdir /etc/X11/xorg.conf.d \
 && cp 99-calibration /etc/X11/xorg.conf.d/ \
 && pip install --upgrade python-instagram \
 && pip install --upgrade pi3d \
 && pip install --upgrade feedparser \
-&& pip install --upgrade google-api-python-client
-&& cp ./rc.local /etc/rc.local
+&& pip install --upgrade google-api-python-client \
+&& cp ./rc.local /etc/rc.local \
 && shutdown -r now
