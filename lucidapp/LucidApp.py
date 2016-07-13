@@ -130,7 +130,7 @@ class LucidApp(object):
 				#print 'img shapes:', ix, iw, sx, sy, iwx, ihy, dim, self.canvas.shape, left_corner
 				self.canvas[sy:ihy, sx:iwx] = image.to_array()[:,ix:iw]
 
-	def show_image_cv(self, image_cv, left_corner):
+	def show_image_cv(self, image_cv, left_corner=(0,0)):
 		dim = image_cv.shape
 		if -1*left_corner[0] < dim[1]: 
 			ix = 0
