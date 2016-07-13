@@ -18,7 +18,7 @@ from ImageStreamDir import ImageStreamDir
 from ImageStreamGoogle import ImageStreamGoogle
 
 class ImageSlider(LucidApp):
-	def __init__(self, ts, cache_path='./cache/', fullscreen=False, resolution=(500, 400), 
+	def __init__(self, ts, cache_path='./cache/', fullscreen=False, resolution=(800, 400), 
 					icon_path='./icons/image_slider.png', base_graphics='cv2'):
 		super(ImageSlider, self).__init__('ImageSlider', cache_path, fullscreen, resolution, icon_path, base_graphics)
 		self.playing = True

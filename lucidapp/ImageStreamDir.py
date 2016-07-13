@@ -16,7 +16,7 @@ from ImageStream import ImageStream, InternetImage
 imageTypes = ['.jpg', '.jpeg', '.png']
 
 class ImageStreamDir(ImageStream):
-	def __init__(self, load_strategy='all', format='cv2', dir_path='./images/'):
+	def __init__(self, load_strategy='paths', format='cv2', dir_path='./images/'):
 		super(ImageStreamDir, self).__init__('dir', format, None)
 		self.dir_path = dir_path
 		self.load_strategy = load_strategy

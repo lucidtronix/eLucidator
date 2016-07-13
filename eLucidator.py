@@ -12,7 +12,7 @@ import lucidapp
 from time import time
 
 class eLucidator(lucidapp.LucidApp):
-	def __init__(self, apps, ts, cache_path='./cache/', fullscreen=False, resolution=(500, 400), icon=None, base_graphics='cv2'):
+	def __init__(self, apps, ts, cache_path='./cache/', fullscreen=False, resolution=(800, 400), icon=None, base_graphics='cv2'):
 		super(eLucidator, self).__init__('eLucidator', cache_path, fullscreen, resolution, icon, base_graphics)#, cache_path='./cache/', fullscreen=fullscreen, resolution=resolution, icon=None, base_graphics=base_graphics)
 		self.apps = apps
 		self.init_app_buttons()
