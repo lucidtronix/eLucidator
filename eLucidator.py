@@ -18,8 +18,7 @@ class eLucidator(lucidapp.LucidApp):
 		self.init_app_buttons()
 
 		self.ts = ts
-		self.redraw = True
-		
+		self.redraw = True	
 
 	def __str__(self):
 		return super(eLucidator, self).__str__() + 'eLucidator'
@@ -39,7 +38,6 @@ class eLucidator(lucidapp.LucidApp):
 		for app in self.apps:
 			self.buttons.append(lucidapp.Button(self, str(app), (bx,by,bw,bh), (150,150,150), app.run))
 			by += 55
-
 
 	def run(self):
 		quit = False
@@ -69,7 +67,6 @@ class eLucidator(lucidapp.LucidApp):
 
 		cv2.destroyAllWindows()
 
-
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--fullscreen', dest='fullscreen', action='store_true')
@@ -87,6 +84,7 @@ if __name__ == '__main__':
 	ts = lucidapp.TouchScreen()
 	apps.append(lucidapp.GoogleSlider(ts=ts, fullscreen=args.fullscreen))
 	apps.append(lucidapp.ImageSlider(ts=ts, fullscreen=args.fullscreen))
+	apps.append(lucidapp.Slideshow(ts=ts, fullscreen=args.fullscreen))
 	try:
 		apps.append(lucidapp.FaceDetector(ts=ts, fullscreen=args.fullscreen))
 	except:

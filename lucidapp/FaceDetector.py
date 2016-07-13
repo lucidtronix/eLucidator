@@ -20,7 +20,8 @@ from ImageStreamDir import ImageStreamDir
 from ImageStreamGoogle import ImageStreamGoogle
 
 class FaceDetector(LucidApp):
-	def __init__(self, ts=None, cache_path='./cache/', fullscreen=False, resolution=(500, 400), icon=None, base_graphics='cv2'):
+	def __init__(self, ts=None, cache_path='./cache/', fullscreen=False, resolution=(500, 400), 
+					icon_path='./icons/face_detection.png', base_graphics='cv2'):
 		super(FaceDetector, self).__init__('FaceDetector', cache_path, fullscreen, resolution, icon, base_graphics)
 		self.playing = True
 		self.stream = ImageStreamDir()

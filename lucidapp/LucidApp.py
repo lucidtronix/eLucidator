@@ -16,7 +16,8 @@ from time import time
 import urllib, cStringIO
 
 class LucidApp(object):
-	def __init__(self, name, cache_path='./cache/', fullscreen=False, resolution=(400, 300), icon=None, base_graphics='cv2'):
+	def __init__(self, name, cache_path='./cache/', fullscreen=False, resolution=(400, 300), 
+				icon_path='./icons/default_icon.png', base_graphics='cv2'):
 		super(LucidApp, self)
 		self.name = name 
 		self.cache_path = cache_path
@@ -26,10 +27,8 @@ class LucidApp(object):
 		self.resolution_cv = (resolution[1], resolution[0], 3)
 		self.playing = True
 		self.base_graphics = base_graphics
-		if icon:
-			self.icon = icon
-		else:
-			self.icon = self.get_default_icon()
+		self.icon_size = (25, 25)
+		self.icon = self.get_icon(icon_path)
 		self.buttons = []
 		self.input_string = ''
 		print 'lucid app constructor', base_graphics, resolution
@@ -82,11 +81,16 @@ class LucidApp(object):
 			self.surface = pygame.display.set_mode(self.resolution)
 		print 'pygame init surface'
 
-	def get_default_icon(self):
+	def get_icon(self, icon_path):
 		if self.base_graphics == 'pygame':
-			return pygame.image.load('./images/default_icon.png')
+			return pygame.image.load(icon_path)
 		elif self.base_graphics == 'cv2':
-			return cv2.imread('./images/default_icon.png')
+			icon = cv2.imread(icon_path)
+			if icon is None:
+				print 'Could not load icon from path:', icon_path
+				return
+			return cv2.resize(icon, self.icon_size, interpolation=cv2.INTER_AREA)
+
 
 	def label(self, text, x, y, size=1, color=(255,255,255), font=cv2.FONT_HERSHEY_SIMPLEX, font_scale=1.0, thickness=1):
 		if self.base_graphics == 'pygame':
