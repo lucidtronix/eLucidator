@@ -27,7 +27,7 @@ class LucidApp(object):
 		self.resolution_cv = (resolution[1], resolution[0], 3)
 		self.playing = True
 		self.base_graphics = base_graphics
-		self.icon_size = (25, 25)
+		self.icon_size = (35, 35)
 		self.icon = self.get_icon(icon_path)
 		self.buttons = []
 		self.input_string = ''
@@ -211,7 +211,12 @@ class Button:
 		elif self.app.base_graphics == 'cv2':
 			pt2 = (self.rect[0] + self.rect[2], self.rect[1] + self.rect[3])
 			cv2.rectangle(self.app.canvas, (self.rect[0], self.rect[1]), pt2, self.cur_color, -1)
-			self.app.label(self.name, self.rect[0]+4, self.rect[1]+(self.rect[3] - 10) )
+			if self.icon is not None:
+				self.app.show_image_cv(self.icon, (self.rect[0]+3, self.rect[1]+3))
+				self.app.label(self.name, self.rect[0]+self.icon.shape[0]+12, self.rect[1]+(self.rect[3]-10))
+
+			else:
+				self.app.label(self.name, self.rect[0]+4, self.rect[1]+(self.rect[3]-10))
 
 
 	def over(self, x, y):

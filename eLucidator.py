@@ -32,11 +32,11 @@ class eLucidator(lucidapp.LucidApp):
 	def init_app_buttons(self):
 		bx = 10
 		by = 70
-		bw = 200
+		bw = 250
 		bh = 40
 
 		for app in self.apps:
-			self.buttons.append(lucidapp.Button(self, str(app), (bx,by,bw,bh), (150,150,150), app.run))
+			self.buttons.append(lucidapp.Button(self, str(app), (bx,by,bw,bh), (150,150,150), app.run, app.icon))
 			by += 55
 
 	def run(self):
@@ -57,12 +57,7 @@ class eLucidator(lucidapp.LucidApp):
 
 						self.ts.double_tap = False
 					b.show()
-				ax = 220
-				ay = 80
-				for app in self.apps:
-					self.show_image_cv(app.icon, (ax, ay))
-					ay += 55
-				
+
 				self.draw()
 
 		cv2.destroyAllWindows()
