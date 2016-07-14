@@ -188,21 +188,31 @@ class ImageRow:
 	def prev_index(self):
 		return (self.cur_image-1) % len(self.images)
 
+	def prev_prev_index(self):
+		return (self.cur_image-2) % len(self.images)
+
 	def next_index(self):
 		return (self.cur_image+1) % len(self.images)		
+
+	def next_next_index(self):
+		return (self.cur_image+2) % len(self.images)
 
 	def display(self):
 		if len(self.images) > 2:
 			self.parent.fill()
 			self.parent.show_image(self.images[self.cur_image], self.corner)
+			c_img_x = self.images[self.cur_image].get_size()[0]
+			rp = (self.corner[0] + c_img_x +self.margin, self.corner[1])
+			lp = (self.corner[0] - (self.images[self.prev_index()].get_size()[0]+self.margin), self.corner[1])
 			if self.corner[0] < 0:
-				size = self.images[self.cur_image].get_size()
-				rp = (self.corner[0] + size[0] + self.margin, self.corner[1])
 				self.parent.show_image(self.images[self.next_index()], rp)
+				if self.corner[0] > self.margin:
+					self.parent.show_image(self.images[self.prev_index()], lp)
 			else:
-				size = self.images[self.prev_index()].get_size()
-				lp = (self.corner[0] - (size[0]+self.margin), self.corner[1])
 				self.parent.show_image(self.images[self.prev_index()], lp)	
+				if rp[0] < self.resolution[0]:
+					self.parent.show_image(self.images[self.next_index()], rp)
+
 
 
 if __name__ == '__main__':

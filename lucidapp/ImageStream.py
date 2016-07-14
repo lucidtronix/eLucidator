@@ -140,4 +140,9 @@ class InternetImage:
 
 
 	def get_size(self):
+		# if self.loaded:
+		# 	if self.format == 'pygame':
+		# 		return self.pil_img.get_size()
+		# 	elif self.format == 'cv2':
+		# 		return self.to_array().shape
 		return self.crop
