@@ -23,7 +23,7 @@ class ImageStreamDir(ImageStream):
 		
 		if 'all' == self.load_strategy:
 			self.load_all()
-		else:
+		elif 'paths' == self.load_strategy:
 			self.image_paths = self.get_paths(self.dir_path, imageTypes)
 			print 'got:', len(self.image_paths), 'image paths.'
 			if not len(self.image_paths) > 0:
@@ -41,16 +41,17 @@ class ImageStreamDir(ImageStream):
 			ii = InternetImage(self.image_paths[self.img_idx], self.dir_path)
 			ii.load()
 			self.img_idx = (self.img_idx+1) % len(self.image_paths)
+			if self.size() < len(self.image_paths):
+				self.images.append(ii)
 			return ii 
 
 	def load_all(self):
-		if "pygame" == self.format:
-			imgs = os.listdir(self.dir_path)
-			for img_id in imgs:
-				ii = InternetImage(self.dir_path+img_id, self.dir_path)
-				ii.load()
-				self.images.append(ii)
-			print 'Loaded'+str(len(self.images))+'Images pygame style.'
+		imgs = os.listdir(self.dir_path)
+		for img_id in imgs:
+			ii = InternetImage(self.dir_path+img_id, self.dir_path)
+			ii.load()
+			self.images.append(ii)
+		print 'Loaded:' + str(len(self.images)) + ' InternetImages style.'
 
 
 	def get_paths(self, path, fileTypes, recursive=True):

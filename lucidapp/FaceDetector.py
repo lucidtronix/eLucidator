@@ -65,7 +65,7 @@ class FaceDetector(LucidApp):
 						self.ts.double_tap = False
 					b.show()
 
-				self.show_image_cv(image, (20,50))
+				self.show_image_cv(image, (20,70))
 				#self.show_image(image)
 				self.draw()
 
