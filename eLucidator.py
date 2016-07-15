@@ -81,10 +81,9 @@ if __name__ == '__main__':
 	apps.append(lucidapp.ImageSlider(ts=ts, fullscreen=args.fullscreen))
 	apps.append(lucidapp.Slideshow(ts=ts, fullscreen=args.fullscreen))
 	try:
-		apps.append(lucidapp.FaceDetector(ts=ts, fullscreen=args.fullscreen))
 		apps.append(lucidapp.CVClient(ts=ts, fullscreen=args.fullscreen))
 	except:
-		print 'Could not load face detector or cv client'
+		print 'Could not load cv client'
 	lucidator = eLucidator(apps, ts=ts, fullscreen=args.fullscreen)
 	lucidator.run()
 

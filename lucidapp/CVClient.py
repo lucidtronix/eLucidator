@@ -45,7 +45,6 @@ class CVClient(LucidApp):
 
 		self.buttons.append(Button(self, 'classify', (100,10,125,40), (50,50,50), self.classify_pil_im))
 
-
 		# allow the camera to warmup
 		sleep(0.2)
 
