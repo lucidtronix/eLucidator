@@ -121,14 +121,19 @@ class LucidApp(object):
 				if 	ix+left_corner[0]+dim[1] > self.canvas.shape[1]:
 					iw = self.canvas.shape[1] - (left_corner[0]+ix)
 
-				assert ix >= 0 and iw <= dim[1]
+				if left_corner[1] < 0:
+					iy = -left_corner[1]
+				if 	iy+left_corner[1]+dim[0] > self.canvas.shape[0]:
+					ih = self.canvas.shape[0] - (left_corner[1]+iy)
+
+				assert ix >= 0 and iw <= dim[1] and iy >= 0 and ih <= dim[0]
 
 				sx = max(0,left_corner[0])
 				sy = max(0,left_corner[1])
 				iwx = min(self.canvas.shape[1], left_corner[0] + dim[1])
 				ihy = min(self.canvas.shape[0], left_corner[1] + dim[0])
 				#print 'img shapes:', ix, iw, sx, sy, iwx, ihy, dim, self.canvas.shape, left_corner
-				self.canvas[sy:ihy, sx:iwx] = image.to_array()[:,ix:iw]
+				self.canvas[sy:ihy, sx:iwx] = image.to_array()[iy:ih,ix:iw]
 
 	def show_image_cv(self, image_cv, left_corner=(0,0)):
 		dim = image_cv.shape
@@ -139,15 +144,20 @@ class LucidApp(object):
 				ix = -left_corner[0]
 			if 	ix+left_corner[0]+dim[1] > self.canvas.shape[1]:
 				iw = self.canvas.shape[1] - (left_corner[0]+ix)
+			if left_corner[1] < 0:
+				iy = -left_corner[1]
+			if 	iy+left_corner[1]+dim[0] > self.canvas.shape[0]:
+				ih = self.canvas.shape[0] - (left_corner[1]+iy)
 
-			assert ix >= 0 and iw <= dim[1]
+			assert ix >= 0 and iw <= dim[1] and iy >= 0 and ih <= dim[0]
 
 			sx = max(0,left_corner[0])
 			sy = max(0,left_corner[1])
 			iwx = min(self.canvas.shape[1], left_corner[0] + dim[1])
 			ihy = min(self.canvas.shape[0], left_corner[1] + dim[0])
+			
 			#print 'img shapes:', ix, iw, sx, sy, iwx, ihy, dim, self.canvas.shape, left_corner
-			self.canvas[sy:ihy, sx:iwx] = image_cv[:,ix:iw]		
+			self.canvas[sy:ihy, sx:iwx] = image_cv[iy:ih,ix:iw]		
 
 	def show_image_cv2(self, image_cv, cx_idx, cy_idx, ix_idx=None, iy_idx=None):
 		if ix_idx and iy_idx:
