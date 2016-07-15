@@ -54,7 +54,6 @@ class CVClient(LucidApp):
 	def run(self):
 
 		while True:
-			self.ts.update()
 
 			# capture frames from the camera
 			for frame in self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True):
@@ -72,7 +71,8 @@ class CVClient(LucidApp):
 
 				# clear the stream in preparation for the next frame
 				self.rawCapture.truncate(0)
-
+	
+				self.ts.update()
 				for b in self.buttons:
 					if b.over(self.ts.mx, self.ts.my) and self.ts.double_tap and time()-b.last_press > 0.5:
 						print 'Try to press button:', b.name
