@@ -40,6 +40,7 @@ class CVClient(LucidApp):
 		self.rawCapture = PiRGBArray(self.camera, size=(320, 240))
 		self.faceCascade = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')
 		self.pil_im_to_classify = Image.open('./images/baby.jpg')
+		self.last_face = np.array(self.pil_im_to_classify)
 		self.classifications = []
 
 		self.buttons.append(Button(self, 'classify', (100,10,125,40), (50,50,50), self.classify_pil_im))
@@ -64,9 +65,12 @@ class CVClient(LucidApp):
 				# Draw a rectangle around the faces
 				for (x, y, w, h) in faces:
 					cv2.rectangle(image, (x, y), (x+w, y+h), (0,255,0), 2)
-
+					self.last_face = image[y:y+h,x:x+w]
+					self.pil_im_to_classify = Image.fromarray(self.last_face)
 
 				self.show_image_cv(image, (20,70))
+				self.show_image_cv(self.last_face, (420,70))
+
 				#self.show_image(image)
 
 				# clear the stream in preparation for the next frame
