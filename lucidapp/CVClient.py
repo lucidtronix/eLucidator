@@ -90,9 +90,7 @@ class CVClient(LucidApp):
 				self.draw()
 	
 	def classify_pil_im(self):
-		print 'Try classification:'
 		ct = ClassificationThread(self.pil_im_to_classify, self.classifications)
-		print 'Made ct thread'
 		ct.start()
 		return 0
 
@@ -101,19 +99,17 @@ class ClassificationThread(threading.Thread):
 		threading.Thread.__init__(self)
 		self.image = image
 		self.classifications = classifications
-
+		self.server_ip = '192.168.1.65' 
 	def run(self):
-		print 'In ct run'
-
 		self.send_image()
-		sleep(3.0)
+		sleep(2.0)
 		self.receive_classification()		
-		print "Exiting classification thread."
+		print "Exitting classification thread."
 
 	def send_image(self):
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		print('Connecting client at:', ('192.168.2.9', PORT))
-		sock.connect(('192.168.2.9', PORT))
+		print('Connecting client at:', (self.server_ip, PORT))
+		sock.connect((self.server_ip, PORT))
 		print "Starting ethernet client image send:"
 		rgb_im = self.image.convert('RGB')
 		img_str = rgb_im.tostring()
@@ -135,7 +131,7 @@ class ClassificationThread(threading.Thread):
 
 	def receive_classification(self):
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		sock.connect(('192.168.2.9', PORT))
+		sock.connect((self.server_ip, PORT))
 		print "Starting ethernet client classification receive..."
 
 		try:
