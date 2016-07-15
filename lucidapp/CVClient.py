@@ -63,7 +63,7 @@ class CVClient(LucidApp):
 				
 				# Draw a rectangle around the faces
 				for (x, y, w, h) in faces:
-					cv2.rectangle(image, (x, y), (x+w, y+h), (0,255,0), 2)
+					cv2.rectangle(image, (x, y), (x+w, y+h), (0,255,0), 1)
 					self.last_face = image[y+1:y+h-1,x+1:x+w-1]
 					self.pil_im_to_classify = Image.fromarray(self.last_face)
 
