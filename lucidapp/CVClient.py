@@ -13,9 +13,9 @@ import numpy as np
 from PIL import Image
 import urllib, cStringIO
 from time import time, sleep
-from LucidApp import LucidApp
 from picamera import PiCamera
 from TouchScreen import TouchScreen
+from LucidApp import LucidApp, Button
 from picamera.array import PiRGBArray
 from ImageStreamDir import ImageStreamDir
 from ImageStreamGoogle import ImageStreamGoogle
@@ -66,28 +66,35 @@ class CVClient(LucidApp):
 				for (x, y, w, h) in faces:
 					cv2.rectangle(image, (x, y), (x+w, y+h), (0,255,0), 2)
 
-				for b in self.buttons:
-					if b.over(self.ts.mx, self.ts.my) and self.ts.double_tap and time()-b.last_press > 0.5:
-						ret = b.press() 
-						if ret < 0:
-							return ret
-						self.ts.double_tap = False
-					b.show()
 
 				self.show_image_cv(image, (20,70))
 				#self.show_image(image)
-				self.draw()
 
 				# clear the stream in preparation for the next frame
 				self.rawCapture.truncate(0)
 
+				for b in self.buttons:
+					if b.over(self.ts.mx, self.ts.my) and self.ts.double_tap and time()-b.last_press > 0.5:
+						print 'Try to press button:', b.name
+						ret = b.press() 
+						if ret < 0:
+							print 'Quit CV Client on buttons'
+							return ret
+						self.ts.double_tap = False
+					b.show()
+
 				ret = self.handle_keys()
 				if ret <= 0:
 					return ret
+
+				self.draw()
 	
 	def classify_pil_im(self):
+		print 'Try classification:'
 		ct = ClassificationThread(self.pil_im_to_classify, self.classifications)
+		print 'Made ct thread'
 		ct.start()
+		return 0
 
 class ClassificationThread(threading.Thread):
 	def __init__(self, image, classifications):
@@ -96,6 +103,8 @@ class ClassificationThread(threading.Thread):
 		self.classifications = classifications
 
 	def run(self):
+		print 'In ct run'
+
 		self.send_image()
 		sleep(3.0)
 		self.receive_classification()		
