@@ -1,4 +1,4 @@
-# TouchScreen.py
+# HID3D.py
 # TouchScreen for LucidTronix eLucidator
 # Samwell Freeman
 # June 2016
