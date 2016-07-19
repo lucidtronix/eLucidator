@@ -24,7 +24,7 @@ from ImageStreamDir import ImageStreamDir
 
 class NYTimesRSS(LucidApp):
 
-	def __init__(self, ts=None, cache_path='./cache/', fullscreen=False, resolution=(800, 400), icon_path='./icons/ny_times.png', base_graphics='cv2'):
+	def __init__(self, ts=None, cache_path='./cache/', fullscreen=False, resolution=(800, 400), icon_path='./icons/nytimes.png', base_graphics='cv2'):
 		super(NYTimesRSS, self).__init__('NYTimesRSS', cache_path, fullscreen, resolution, icon_path, base_graphics)
 		if ts:
 			self.ts = ts
@@ -94,6 +94,7 @@ class Article:
 		self.x = x
 		self.y = y
 		self.app = app
+
 		self.feed.title = self.feed.title.encode('ascii','ignore')
 	def show_title(self):
 		if (self.over(self.app.ts.mx, self.app.ts.my)):
@@ -101,6 +102,7 @@ class Article:
 
 			if self.app.ts.double_tap:
 				webbrowser.open(self.feed.link)
+				self.app.ts.double_tap = False
 				# cj = CookieJar()
 				# opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
 				# p = opener.open(self.feed.link)
