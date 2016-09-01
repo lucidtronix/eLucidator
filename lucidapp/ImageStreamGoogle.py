@@ -46,6 +46,9 @@ class ImageStreamGoogle(ImageStream):
 	def google_query(self, keyword):
 		try:
 			results = self.google_get_image_results(keyword)
+			if not results:
+				print 'Google image results:None for keyword:', keyword
+				return
 			print 'Got search results:', len(results)
 			for item in results:
 				keyword_path = os.path.join(self.cache_path, keyword)
