@@ -39,7 +39,11 @@ class eLucidator(lucidapp.LucidApp):
 			self.buttons.append(lucidapp.Button(self, str(app), (bx,by,bw,bh), (150,150,150), app.run, app.icon))
 			by += 55
 
-	def run(self):
+	def run(self, run_app=""):
+		for app in self.apps:
+			if app.name == run_app:
+				app.run()
+				
 		quit = False
 		while not quit:
 
@@ -65,6 +69,8 @@ class eLucidator(lucidapp.LucidApp):
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--fullscreen', dest='fullscreen', action='store_true')
+	parser.add_argument('--run', dest='run')
+
 	parser.set_defaults(fullscreen=False)
 	args = parser.parse_args()
 	
@@ -82,11 +88,13 @@ if __name__ == '__main__':
 	apps.append(lucidapp.ImageSlider(ts=ts, fullscreen=args.fullscreen))
 	apps.append(lucidapp.NYTimesRSS(ts=ts, fullscreen=args.fullscreen))
 	apps.append(lucidapp.Slideshow(ts=ts, fullscreen=args.fullscreen))
+
 	try:
 		apps.append(lucidapp.CVClient(ts=ts, fullscreen=args.fullscreen))
 	except:
 		print 'Could not load cv client'
+
 	lucidator = eLucidator(apps, ts=ts, fullscreen=args.fullscreen)
-	lucidator.run()
+	lucidator.run(args.run)
 
 	cv2.destroyAllWindows()

@@ -10,7 +10,7 @@ import pygame
 import threading
 import numpy as np
 from pygame import *
-import pygame.ftfont
+import pygame.font
 from PIL import Image
 from time import time
 import urllib, cStringIO
