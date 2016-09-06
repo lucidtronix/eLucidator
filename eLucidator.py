@@ -84,10 +84,11 @@ if __name__ == '__main__':
 
 	ts = lucidapp.TouchScreen()
 
+
+	apps.append(lucidapp.SlideshowTouch(ts=ts, fullscreen=args.fullscreen))
 	apps.append(lucidapp.GoogleSlider(ts=ts, fullscreen=args.fullscreen))
 	apps.append(lucidapp.ImageSlider(ts=ts, fullscreen=args.fullscreen))
 	apps.append(lucidapp.NYTimesRSS(ts=ts, fullscreen=args.fullscreen))
-	apps.append(lucidapp.Slideshow(ts=ts, fullscreen=args.fullscreen))
 
 	try:
 		apps.append(lucidapp.CVClient(ts=ts, fullscreen=args.fullscreen))

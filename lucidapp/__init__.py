@@ -4,6 +4,7 @@ from ImageSlider import ImageSlider
 from GoogleSlider import GoogleSlider
 from TouchScreen import TouchScreen
 from Slideshow import Slideshow
+from SlideshowTouch import SlideshowTouch
 from NYTimesRSS import NYTimesRSS
 try:
 	from FaceDetector import FaceDetector
