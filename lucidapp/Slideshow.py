@@ -12,7 +12,7 @@ import numpy as np
 from time import time
 from PIL import Image
 import urllib, cStringIO
-from LucidApp import LucidApp
+from LucidApp import LucidApp, Button
 from TouchScreen import TouchScreen
 from ImageStreamDir import ImageStreamDir
 from ImageStreamGoogle import ImageStreamGoogle
@@ -37,8 +37,27 @@ class Slideshow(LucidApp):
 		self.last_image = None
 		self.cur_image = None
 		self.image_corner = (30,90)
+
+		self.buttons.append(Button(self, 'next', (260,10,80,40), (50,50,50), self.next))
+		self.buttons.append(Button(self, 'previous', (100,10,145,40), (50,50,50), self.prev_image))
+
+
 	def __str__(self):
 		return 'Slideshow'
+
+	def next_image(self):
+		self.last_image = self.cur_image
+		if self.last_image is not None:
+			self.fading = True
+			self.fade_start = time()
+		self.cur_image = self.stream.next()
+		self.last_update = time()		
+
+	def prev_image(self):
+		self.last_image = self.stream.prev()
+		self.cur_image = self.last_image
+		self.last_update = time()
+		return 0	
 
 	def run(self):
 		cx = oldx = 0
@@ -60,13 +79,7 @@ class Slideshow(LucidApp):
 				b.show()
 
 			if time()-self.last_update > self.delay:
-				self.last_image = self.cur_image
-				if self.last_image is not None:
-					self.fading = True
-					self.fade_start = time()
-					print 'Now fading...'
-				self.cur_image = self.stream.next()
-				self.last_update = time()
+				self.next_image()
 
 			if self.fading:
 				alpha =	(time()-self.fade_start) / self.fade_time 
@@ -80,7 +93,10 @@ class Slideshow(LucidApp):
 				self.show_image(self.cur_image, self.image_corner)
 			self.draw()
 
-
+	def next(self):
+		self.next_image()
+		self.fading = False
+		return 0
 
 if __name__ == '__main__':
 	app = Slideshow()
