@@ -41,7 +41,7 @@ class LucidApp(object):
 			self.buttons.append(Button(self, 'exit', (10,10,75,40), (50,50,50), exit_cv2))
 
 	def __str__(self):
-		return "LucidApp:" +  self.name
+		return self.name
 
 	def open(self):
 		pass
