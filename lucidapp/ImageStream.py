@@ -55,18 +55,24 @@ class ImageStream(object):
 
 
 class InternetImage:
-	def __init__(self, img_path, keyword_path, format='cv2'):
+	def __init__(self, img_path="", keyword_path="", format='cv2', cv_img=None):
 		self.crop = (400, 300)
 		self.img_path = img_path
 		self.keyword_path = keyword_path
 		self.format = format
-		self.loaded = False
+		self.cv_img = cv_img
+		
+		if self.cv_img is None:
+			self.loaded = False
+			lt = Thread(target=self.load)
+			lt.start()
+		else:
+			self.loaded = True
+
 		self.error = False
 		self.pil_img = None
-		self.cv_img = None
 
-		lt = Thread(target=self.load)
-		lt.start()
+
 
 	def load_image_file(self):
 		try:
