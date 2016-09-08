@@ -91,6 +91,9 @@ class LucidApp(object):
 				return
 			return cv2.resize(icon, self.icon_size, interpolation=cv2.INTER_AREA)
 
+	def text_size(self, text, font=cv2.FONT_HERSHEY_SIMPLEX, font_scale=1, thickness=1):
+		tsize = cv2.getTextSize(text, font, font_scale, thickness)[0]
+		return tsize
 
 	def label(self, text, x, y, size=1, color=(255,255,255), font=cv2.FONT_HERSHEY_SIMPLEX, font_scale=1.0, thickness=1):
 		if self.base_graphics == 'pygame':
@@ -218,20 +221,23 @@ class Button:
 		self.callback = callback
 		self.icon = icon
 		self.last_press = 0
+		self.margin = 3
 
 	def show(self):
 		if self.app.base_graphics == 'pygame':
 			pygame.draw.rect(self.app.surface, self.cur_color, self.rect, 0)
 			self.app.label(self.name, self.rect[0]+6, self.rect[1]+(self.rect[3]/2) - 10)
 		elif self.app.base_graphics == 'cv2':
-			pt2 = (self.rect[0] + self.rect[2], self.rect[1] + self.rect[3])
-			cv2.rectangle(self.app.canvas, (self.rect[0], self.rect[1]), pt2, self.cur_color, -1)
+			tsize = self.app.text_size(self.name)
 			if self.icon is not None:
-				self.app.show_image_cv(self.icon, (self.rect[0]+3, self.rect[1]+3))
-				self.app.label(self.name, self.rect[0]+self.icon.shape[0]+12, self.rect[1]+(self.rect[3]-10))
-
+				pt2 = (self.rect[0] + tsize[0] + self.icon.shape[0]+self.margin*4, self.rect[1] + self.rect[3])
+				cv2.rectangle(self.app.canvas, (self.rect[0], self.rect[1]), pt2, self.cur_color, -1)
+				self.app.show_image_cv(self.icon, (self.rect[0]+self.margin, self.rect[1]+self.margin))
+				self.app.label(self.name, self.rect[0]+self.icon.shape[0]+self.margin*3, self.rect[1]+(self.rect[3]-self.margin*3))
 			else:
-				self.app.label(self.name, self.rect[0]+4, self.rect[1]+(self.rect[3]-10))
+				pt2 = (self.rect[0] + tsize[0] +self.margin*2, self.rect[1] + self.rect[3])
+				cv2.rectangle(self.app.canvas, (self.rect[0], self.rect[1]), pt2, self.cur_color, -1)				
+				self.app.label(self.name, self.rect[0]+self.margin, self.rect[1]+(self.rect[3]-self.margin*3))
 
 
 	def over(self, x, y):
