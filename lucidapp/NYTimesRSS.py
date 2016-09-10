@@ -80,11 +80,11 @@ class NYTimesRSS(LucidApp):
 			#print post.title + ": " + post.link
 
 
-	def create_articles(self, feeds, x=10, y=70):
+	def create_articles(self, feeds, x=10, y=100):
 		articles = []
-		for f in feeds:
+		for f in feeds[:7]:
 			articles.append(Article(f, x, y, self))
-			y += 25
+			y += 35
 
 		return articles
 
@@ -96,25 +96,28 @@ class Article:
 		self.app = app
 
 		self.feed.title = self.feed.title.encode('ascii','ignore')
+		self.images = []
+		
+
 	def show_title(self):
 		if (self.over(self.app.ts.mx, self.app.ts.my)):
 			self.app.label(self.feed.title, self.x, self.y)
 
 			if self.app.ts.double_tap:
-				webbrowser.open(self.feed.link)
+				#webbrowser.open(self.feed.link)
+				print "Try to read url", self.feed.link
 				self.app.ts.double_tap = False
-				# cj = CookieJar()
-				# opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-				# p = opener.open(self.feed.link)
+				cj = CookieJar()
+				opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+				p = opener.open(self.feed.link)
 
-				# # print "Try to read url", self.feed.link
 				# # req = urllib2.Request(self.feed.link)
 				# # print "Got request"
 				# # response = urllib2.urlopen(req)
 				# # print "Got respone"
 
 				# # html = response.read()
-				# print p.read()
+				print p.read()
 
 		else:
 			self.app.label(self.feed.title, self.x, self.y)

@@ -21,7 +21,6 @@ sudo apt-get update \
 && sudo make install \
 && sudo ldconfig \
 && cp config_touchscreen.txt /boot/config.txt \
-# set audio to headphone jack
 && amixer cset numid=3 1 \
 && mkdir /etc/X11/xorg.conf.d \
 && cp 99-calibration /etc/X11/xorg.conf.d/ \
@@ -29,6 +28,7 @@ sudo apt-get update \
 && pip install --upgrade python-instagram \
 && pip install --upgrade pi3d \
 && pip install --upgrade feedparser \
+&& pip install --upgrade beautifulsoup4 \
 && pip install --upgrade google-api-python-client \
 && cp ./rc.local /etc/rc.local \
 && shutdown -r now
