@@ -34,7 +34,9 @@ class ImageRow:
 		self.cur_image = 1
 		self.was_easing = False
 
-
+		self.images.append(self.stream.next())
+		self.images.append(self.stream.next())
+		
 	def update(self):
 		if len(self.images) > 2:
 			

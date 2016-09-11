@@ -4,6 +4,7 @@
 # July 2016
 
 import os
+import re
 import sys
 import cv2
 import pygame
@@ -12,15 +13,20 @@ import urllib2
 import argparse
 import threading
 import feedparser
-import webbrowser
 import numpy as np
 from time import time
 from PIL import Image
 import urllib, cStringIO
+from ImageRow import ImageRow
+from bs4 import BeautifulSoup
 from cookielib import CookieJar
 from TouchScreen import TouchScreen
 from LucidApp import LucidApp, Button
-from ImageStreamDir import ImageStreamDir
+from ImageStreamLink import ImageStreamLink
+
+page = BeautifulSoup(urllib2.urlopen("http://www.url.com"))
+page.findAll('img')
+
 
 class NYTimesRSS(LucidApp):
 
@@ -33,8 +39,12 @@ class NYTimesRSS(LucidApp):
 		self.playing = True
 		#self.buttons.append(Button(self, 'more', (100,10,85,40), (50,50,50), self.get_more_images))
 
+		self.max_feeds = 6
 		self.science_feeds = self.get_feed()
 		self.articles = self.create_articles(self.science_feeds)
+		article_buttons = [a.btn for a in self.articles]
+		self.buttons += article_buttons
+
 
 	def __str__(self):
 		return 'NYTimesRSS'
@@ -65,10 +75,11 @@ class NYTimesRSS(LucidApp):
 					self.ts.double_tap = False
 				b.show()
 
-			for a in self.articles:
-				a.show_title()
+			for article in self.articles:
+				article.show()
 
 			self.draw()
+
 
 		return 0
 
@@ -82,9 +93,9 @@ class NYTimesRSS(LucidApp):
 
 	def create_articles(self, feeds, x=10, y=100):
 		articles = []
-		for f in feeds[:7]:
+		for f in feeds[:self.max_feeds]:
 			articles.append(Article(f, x, y, self))
-			y += 35
+			y += 45
 
 		return articles
 
@@ -94,40 +105,48 @@ class Article:
 		self.x = x
 		self.y = y
 		self.app = app
-
+		self.show_me = False
 		self.feed.title = self.feed.title.encode('ascii','ignore')
-		self.images = []
-		
 
-	def show_title(self):
-		if (self.over(self.app.ts.mx, self.app.ts.my)):
-			self.app.label(self.feed.title, self.x, self.y)
+		self.btn = Button(self.app, self.feed.title[:42], (x, y,85,40), (50,50,50), self.toggle_show)
+		self.images = [] 
+			
+		self.keyword = self.feed.title[:12].replace(' ', '_')
+		self.stream = ImageStreamLink(self.feed.link, self.keyword)
+		self.row = ImageRow(self.app, self.stream, self.app.ts, self.app.resolution)
 
-			if self.app.ts.double_tap:
-				#webbrowser.open(self.feed.link)
-				print "Try to read url", self.feed.link
-				self.app.ts.double_tap = False
-				cj = CookieJar()
-				opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-				p = opener.open(self.feed.link)
+		self.keyword_path ='./cache/news/' + self.keyword
+		if not os.path.exists(self.keyword_path):
+			os.makedirs(self.keyword_path)
 
-				# # req = urllib2.Request(self.feed.link)
-				# # print "Got request"
-				# # response = urllib2.urlopen(req)
-				# # print "Got respone"
 
-				# # html = response.read()
-				print p.read()
 
-		else:
-			self.app.label(self.feed.title, self.x, self.y)
+	def get_images(self):
+		cj = CookieJar()
+		opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+		p = opener.open(self.feed.link)
 
-	def over(self, mx, my):
-		t_width, t_height = 150, 20
-		if(mx > self.x and mx < self.x + t_width and my > self.y and my < self.y + t_height):
-			return True
-		return False
+		page = BeautifulSoup(p)
+		img_tags = page.findAll('img')
+		print "Found:", len(img_tags), "images at page:",self.feed.link
 
+		for img in img_tags:
+			urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', str(img))
+			for img_link in urls:
+				ii = InternetImage(img_link, self.keyword_path)
+				self.images.append(ii)
+
+		return 0
+
+	def toggle_show(self):
+		self.show_me = not self.show_me
+		print self.keyword, 'show:', str(self.show_me)
+		return 0	
+
+	def show(self):
+		if self.show_me:
+			self.row.update()
+			self.row.display()
 
 
 

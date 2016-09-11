@@ -219,29 +219,33 @@ class Button:
 		self.highlight = (40,205,150)
 		self.cur_color = self.color
 		self.callback = callback
-		self.icon = icon
 		self.last_press = 0
 		self.margin = 3
+
+		self.icon = icon
+		tsize = self.app.text_size(self.name)
+		if self.icon is not None:
+			self.pt2 = (self.rect[0] + tsize[0] + self.icon.shape[0]+self.margin*4, self.rect[1] + self.rect[3])		
+		else:
+			self.pt2 = (self.rect[0] + tsize[0] +self.margin*2, self.rect[1] + self.rect[3])
 
 	def show(self):
 		if self.app.base_graphics == 'pygame':
 			pygame.draw.rect(self.app.surface, self.cur_color, self.rect, 0)
 			self.app.label(self.name, self.rect[0]+6, self.rect[1]+(self.rect[3]/2) - 10)
 		elif self.app.base_graphics == 'cv2':
-			tsize = self.app.text_size(self.name)
 			if self.icon is not None:
-				pt2 = (self.rect[0] + tsize[0] + self.icon.shape[0]+self.margin*4, self.rect[1] + self.rect[3])
-				cv2.rectangle(self.app.canvas, (self.rect[0], self.rect[1]), pt2, self.cur_color, -1)
+				#pt2 = (self.rect[0] + tsize[0] + self.icon.shape[0]+self.margin*4, self.rect[1] + self.rect[3])
+				cv2.rectangle(self.app.canvas, (self.rect[0], self.rect[1]), self.pt2, self.cur_color, -1)
 				self.app.show_image_cv(self.icon, (self.rect[0]+self.margin, self.rect[1]+self.margin))
 				self.app.label(self.name, self.rect[0]+self.icon.shape[0]+self.margin*3, self.rect[1]+(self.rect[3]-self.margin*3))
 			else:
-				pt2 = (self.rect[0] + tsize[0] +self.margin*2, self.rect[1] + self.rect[3])
-				cv2.rectangle(self.app.canvas, (self.rect[0], self.rect[1]), pt2, self.cur_color, -1)				
+				#pt2 = (self.rect[0] + tsize[0] +self.margin*2, self.rect[1] + self.rect[3])
+				cv2.rectangle(self.app.canvas, (self.rect[0], self.rect[1]), self.pt2, self.cur_color, -1)				
 				self.app.label(self.name, self.rect[0]+self.margin, self.rect[1]+(self.rect[3]-self.margin*3))
 
-
 	def over(self, x, y):
-		is_over = self.rect[0] < x < self.rect[0]+self.rect[2] and self.rect[1] < y < self.rect[1]+self.rect[3]
+		is_over = self.rect[0] < x < self.pt2[0] and self.rect[1] < y < self.pt2[1]
 		if is_over:
 			self.cur_color = self.highlight
 		else:
