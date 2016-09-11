@@ -221,9 +221,10 @@ class Button:
 		self.callback = callback
 		self.last_press = 0
 		self.margin = 3
-
 		self.icon = icon
-		tsize = self.app.text_size(self.name)
+
+		self.font_scale = self.rect[3] / 40.0
+		tsize = self.app.text_size(self.name, font_scale=self.font_scale)
 		if self.icon is not None:
 			self.pt2 = (self.rect[0] + tsize[0] + self.icon.shape[0]+self.margin*4, self.rect[1] + self.rect[3])		
 		else:
@@ -235,12 +236,10 @@ class Button:
 			self.app.label(self.name, self.rect[0]+6, self.rect[1]+(self.rect[3]/2) - 10)
 		elif self.app.base_graphics == 'cv2':
 			if self.icon is not None:
-				#pt2 = (self.rect[0] + tsize[0] + self.icon.shape[0]+self.margin*4, self.rect[1] + self.rect[3])
 				cv2.rectangle(self.app.canvas, (self.rect[0], self.rect[1]), self.pt2, self.cur_color, -1)
 				self.app.show_image_cv(self.icon, (self.rect[0]+self.margin, self.rect[1]+self.margin))
 				self.app.label(self.name, self.rect[0]+self.icon.shape[0]+self.margin*3, self.rect[1]+(self.rect[3]-self.margin*3))
 			else:
-				#pt2 = (self.rect[0] + tsize[0] +self.margin*2, self.rect[1] + self.rect[3])
 				cv2.rectangle(self.app.canvas, (self.rect[0], self.rect[1]), self.pt2, self.cur_color, -1)				
 				self.app.label(self.name, self.rect[0]+self.margin, self.rect[1]+(self.rect[3]-self.margin*3))
 
