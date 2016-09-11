@@ -60,10 +60,14 @@ class NYTimesRSS(LucidApp):
 			ret = self.handle_keys()
 			if ret < 0:
 				print 'Quit nytimes slider on keys'
+				quit = True
 				return 0
 
 			self.fill()
 			self.label('NYTimes RSS', 205, 40)
+
+			for article in self.articles:
+				article.show()
 
 			for b in self.buttons:
 				is_over = b.over(self.ts.mx, self.ts.my)
@@ -74,9 +78,6 @@ class NYTimesRSS(LucidApp):
 						return ret
 					self.ts.double_tap = False
 				b.show()
-
-			for article in self.articles:
-				article.show()
 
 			self.draw()
 
@@ -108,18 +109,17 @@ class Article:
 		self.show_me = False
 		self.feed.title = self.feed.title.encode('ascii','ignore')
 
-		self.btn = Button(self.app, self.feed.title[:42], (x, y,85,40), (50,50,50), self.toggle_show)
+		self.btn = Button(self.app, self.feed.title[:42], (x, y,85,20), (50,50,50), self.toggle_show)
 		self.images = [] 
 			
 		self.keyword = self.feed.title[:12].replace(' ', '_')
-		self.stream = ImageStreamLink(self.feed.link, self.keyword)
-		self.row = ImageRow(self.app, self.stream, self.app.ts, self.app.resolution)
+
 
 		self.keyword_path ='./cache/news/' + self.keyword
 		if not os.path.exists(self.keyword_path):
 			os.makedirs(self.keyword_path)
 
-
+		self.row = None
 
 	def get_images(self):
 		cj = CookieJar()
@@ -139,12 +139,16 @@ class Article:
 		return 0
 
 	def toggle_show(self):
+		if self.row is None:
+			self.stream = ImageStreamLink(self.feed.link, self.keyword)
+			self.row = ImageRow(self.app, self.stream, self.app.ts, self.app.resolution)
+
 		self.show_me = not self.show_me
 		print self.keyword, 'show:', str(self.show_me)
 		return 0	
 
 	def show(self):
-		if self.show_me:
+		if self.show_me and self.row:
 			self.row.update()
 			self.row.display()
 
