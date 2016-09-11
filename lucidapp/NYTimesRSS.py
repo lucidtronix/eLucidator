@@ -92,11 +92,11 @@ class NYTimesRSS(LucidApp):
 			#print post.title + ": " + post.link
 
 
-	def create_articles(self, feeds, x=10, y=100):
+	def create_articles(self, feeds, x=10, y=70):
 		articles = []
 		for f in feeds[:self.max_feeds]:
 			articles.append(Article(f, x, y, self))
-			y += 45
+			y += 40
 
 		return articles
 
@@ -109,7 +109,7 @@ class Article:
 		self.show_me = False
 		self.feed.title = self.feed.title.encode('ascii','ignore')
 
-		self.btn = Button(self.app, self.feed.title[:42], (x, y,85,20), (50,50,50), self.toggle_show)
+		self.btn = Button(self.app, self.feed.title[:42], (x, y,85,30), (50,50,50), self.toggle_show)
 		self.images = [] 
 			
 		self.keyword = self.feed.title[:12].replace(' ', '_')

@@ -223,7 +223,8 @@ class Button:
 		self.margin = 3
 		self.icon = icon
 
-		self.font_scale = self.rect[3] / 40.0
+		self.font_constant = 40.0
+		self.font_scale = self.rect[3] / self.font_constant
 		tsize = self.app.text_size(self.name, font_scale=self.font_scale)
 		if self.icon is not None:
 			self.pt2 = (self.rect[0] + tsize[0] + self.icon.shape[0]+self.margin*4, self.rect[1] + self.rect[3])		
@@ -238,10 +239,12 @@ class Button:
 			if self.icon is not None:
 				cv2.rectangle(self.app.canvas, (self.rect[0], self.rect[1]), self.pt2, self.cur_color, -1)
 				self.app.show_image_cv(self.icon, (self.rect[0]+self.margin, self.rect[1]+self.margin))
-				self.app.label(self.name, self.rect[0]+self.icon.shape[0]+self.margin*3, self.rect[1]+(self.rect[3]-self.margin*3))
+				text_height = int(self.rect[3]-self.margin*self.font_scale*3)
+				self.app.label(self.name, self.rect[0]+self.icon.shape[0]+self.margin*3, self.rect[1]+text_height, font_scale=self.font_scale)
 			else:
-				cv2.rectangle(self.app.canvas, (self.rect[0], self.rect[1]), self.pt2, self.cur_color, -1)				
-				self.app.label(self.name, self.rect[0]+self.margin, self.rect[1]+(self.rect[3]-self.margin*3))
+				cv2.rectangle(self.app.canvas, (self.rect[0], self.rect[1]), self.pt2, self.cur_color, -1)
+				text_height = int(self.rect[3]-self.margin*self.font_scale*3)	
+				self.app.label(self.name, self.rect[0]+self.margin, self.rect[1]+text_height, font_scale=self.font_scale)
 
 	def over(self, x, y):
 		is_over = self.rect[0] < x < self.pt2[0] and self.rect[1] < y < self.pt2[1]
