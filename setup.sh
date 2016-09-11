@@ -20,10 +20,10 @@ sudo apt-get update \
 && make -j4 \
 && sudo make install \
 && sudo ldconfig \
-&& cp config_touchscreen.txt /boot/config.txt \
+&& cp ./config_touchscreen.txt /boot/config.txt \
 && amixer cset numid=3 1 \
 && mkdir /etc/X11/xorg.conf.d \
-&& cp 99-calibration /etc/X11/xorg.conf.d/ \
+&& cp ./99-calibration /etc/X11/xorg.conf.d/ \
 && apt-get -y install arduino \
 && pip install --upgrade python-instagram \
 && pip install --upgrade pi3d \
