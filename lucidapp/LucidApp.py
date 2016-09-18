@@ -188,7 +188,7 @@ class LucidApp(object):
 				self.input_string += str(chr(char))
 
 			elif char == 27: # Escape
-				return 0
+				return -1
 			elif char == 8: # Delete
 				if len(self.input_string):
 					self.input_string = self.input_string[:-1]
