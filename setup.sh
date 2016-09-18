@@ -20,15 +20,16 @@ sudo apt-get update \
 && make -j4 \
 && sudo make install \
 && sudo ldconfig \
-&& cp ./config_touchscreen.txt /boot/config.txt \
-&& amixer cset numid=3 1 \
-&& mkdir /etc/X11/xorg.conf.d \
-&& cp ./99-calibration /etc/X11/xorg.conf.d/ \
-&& apt-get -y install arduino \
-&& pip install --upgrade python-instagram \
-&& pip install --upgrade pi3d \
-&& pip install --upgrade feedparser \
-&& pip install --upgrade beautifulsoup4 \
-&& pip install --upgrade google-api-python-client \
-&& cp ./rc.local /etc/rc.local \
-&& shutdown -r now
+&& sudo cp ./config_touchscreen.txt /boot/config.txt \
+# set audio output to headphone jack
+&& sudo amixer cset numid=3 1 \
+&& sudo mkdir /etc/X11/xorg.conf.d \
+&& sudo cp ./99-calibration /etc/X11/xorg.conf.d/ \
+&& sudo apt-get -y install arduino \
+&& sudo pip install --upgrade python-instagram \
+&& sudo pip install --upgrade pi3d \
+&& sudo pip install --upgrade feedparser \
+&& sudo pip install --upgrade beautifulsoup4 \
+&& sudo pip install --upgrade google-api-python-client \
+&& sudo cp ./rc.local /etc/rc.local \
+&& sudo shutdown -r now
