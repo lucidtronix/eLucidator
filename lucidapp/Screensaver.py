@@ -36,11 +36,11 @@ class Screensaver(LucidApp):
 
 	def run(self):
 		num_samples = 60
-		
+		offset = 70
 		sample_matrix = np.random.rand(2, num_samples)
-		sample_matrix[0,:] *= self.resolution[0]-10
-		sample_matrix[1,:] *= self.resolution[1]-30
-		sample_matrix[1,:] += 20
+		sample_matrix[0,:] *= self.resolution[0]-offset
+		sample_matrix[1,:] *= self.resolution[1]-offset
+		sample_matrix += offset
 
 		deltas = np.random.randn(2, num_samples) / 3.0
 
@@ -73,7 +73,7 @@ class Screensaver(LucidApp):
 			deltas[0,:][out] = -deltas[0,:][out]
 			out = sample_matrix[1,:] > self.resolution[1]
 			deltas[1,:][out] = -deltas[1,:][out]	
-			out = sample_matrix < 1
+			out = sample_matrix < offset
 			deltas[out] = -deltas[out]
 			sample_matrix += deltas
 
