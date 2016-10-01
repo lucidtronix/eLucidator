@@ -76,7 +76,8 @@ class Mandelbrot(LucidApp):
 				if self.cur_y >= self.mandelbrot_image.shape[1]:
 					self.cur_y = 0
 					self.cur_x = 0
-					
+			
+			self.label(self.name, 70, 300, font_scale=1.5, alpha = 0.5)
 			self.draw()
 
 

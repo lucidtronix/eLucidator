@@ -95,18 +95,29 @@ class LucidApp(object):
 		tsize = cv2.getTextSize(text, font, font_scale, thickness)[0]
 		return tsize
 
-	def label(self, text, x, y, size=1, color=(255,255,255), font=cv2.FONT_HERSHEY_SIMPLEX, font_scale=1.0, thickness=1):
+	def label(self, text, x, y, size=1, color=(255,255,255), font=cv2.FONT_HERSHEY_SIMPLEX, font_scale=1.0, thickness=1, alpha=1.0):
 		if self.base_graphics == 'pygame':
 			my_label = self.py_font.render(text, size, color)
 			self.surface.blit(my_label, (x, y))
 		elif self.base_graphics == 'cv2':
+			if alpha < 1.0:
+				copy = self.canvas.copy() # FixME: USE A SUB IMAGE HERE
+				cv2.putText(self.canvas, "PyImageSearch: alpha={}".format(alpha), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 255), 3)
+			
 			cv2.putText(self.canvas, text, (x, y), font, font_scale, color, thickness)			
+			
+			if alpha < 1.0:
+				cv2.addWeighted(copy, alpha, self.canvas, 1 - alpha, 0, self.canvas)	
+	
+
+
 
 	def fill(self, color=(0,0,0)):
 		if self.base_graphics == 'pygame':
 			self.surface.fill(color)
 		elif self.base_graphics == 'cv2':
 			self.canvas = np.zeros(self.resolution_cv, np.uint8)
+			
 			#self.canvas[0].fill(color[0])
 			#self.canvas[1].fill(color[1])
 			#self.canvas[2].fill(color[2])
