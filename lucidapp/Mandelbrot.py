@@ -76,10 +76,10 @@ class Mandelbrot(LucidApp):
 			self.color_tile((x1,x2,y1,y2))
 
 			self.cur_x += 1
-			if self.cur_x > tiles_at_this_level-1:
+			if x2 >= self.mandelbrot_shape[1]-xpix:
 				self.cur_y += 1
 				self.cur_x = 0
-				if self.cur_y > tiles_at_this_level-1:
+				if y2 >= self.mandelbrot_shape[3]-ypix:
 					self.cur_y = 0
 					self.cur_x = 0
 					self.level += 1
