@@ -89,6 +89,8 @@ if __name__ == '__main__':
 	apps.append(lucidapp.GoogleSlider(ts=ts, fullscreen=args.fullscreen))
 	apps.append(lucidapp.ImageSlider(ts=ts, fullscreen=args.fullscreen))
 	apps.append(lucidapp.NYTimesRSS(ts=ts, fullscreen=args.fullscreen))
+	apps.append(lucidapp.Mandelbrot(ts=ts, fullscreen=args.fullscreen))
+	apps.append(lucidapp.BallBounce(ts=ts, fullscreen=args.fullscreen))
 
 	try:
 		apps.append(lucidapp.CVClient(ts=ts, fullscreen=args.fullscreen))

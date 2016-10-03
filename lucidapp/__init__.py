@@ -6,6 +6,9 @@ from TouchScreen import TouchScreen
 from Slideshow import Slideshow
 from SlideshowTouch import SlideshowTouch
 from NYTimesRSS import NYTimesRSS
+from BallBounce import BallBounce
+from Mandelbrot import Mandelbrot
+
 try:
 	from FaceDetector import FaceDetector
 	from CVClient import CVClient	
