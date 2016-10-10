@@ -1,4 +1,4 @@
-# LucidApp.py
+# GoogleSlider.py
 # Google Slider for LucidTronix eLucidator Applications
 # Samwell Freeman
 # June 2016

@@ -1,4 +1,4 @@
-# google_image_search_api.py
+# ImageStreamGoogle.py
 # Written by Samwell Freeman
 # November 2015
 

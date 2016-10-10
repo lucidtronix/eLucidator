@@ -24,9 +24,6 @@ from TouchScreen import TouchScreen
 from LucidApp import LucidApp, Button
 from ImageStreamLink import ImageStreamLink
 
-page = BeautifulSoup(urllib2.urlopen("http://www.url.com"))
-page.findAll('img')
-
 
 class NYTimesRSS(LucidApp):
 
