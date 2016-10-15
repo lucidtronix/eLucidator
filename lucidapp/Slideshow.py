@@ -12,8 +12,8 @@ import numpy as np
 from time import time
 from PIL import Image
 import urllib, cStringIO
-from LucidApp import LucidApp, Button
 from TouchScreen import TouchScreen
+from LucidApp import LucidApp, Button
 from ImageStreamDir import ImageStreamDir
 from ImageStreamGoogle import ImageStreamGoogle
 
