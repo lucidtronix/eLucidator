@@ -11,6 +11,8 @@ import argparse
 import lucidapp
 from time import time
 
+screen_width = 800
+screen_height = 480
 class eLucidator(lucidapp.LucidApp):
 	def __init__(self, apps, ts, cache_path='./cache/', fullscreen=False, resolution=(800, 480), icon=None, base_graphics='cv2'):
 		super(eLucidator, self).__init__('eLucidator', cache_path, fullscreen, resolution, icon, base_graphics)#, cache_path='./cache/', fullscreen=fullscreen, resolution=resolution, icon=None, base_graphics=base_graphics)
@@ -83,15 +85,16 @@ if __name__ == '__main__':
 		cv2.namedWindow("canvas")
 
 	ts = lucidapp.TouchScreen()
+	res = (screen_width, screen_height)
+	
 
-
-	apps.append(lucidapp.SlideshowTouch(ts=ts, fullscreen=args.fullscreen))
-	apps.append(lucidapp.SlideshowMET(ts=ts, fullscreen=args.fullscreen))
-	apps.append(lucidapp.GoogleSlider(ts=ts, fullscreen=args.fullscreen))
-	apps.append(lucidapp.ImageSlider(ts=ts, fullscreen=args.fullscreen))
-	apps.append(lucidapp.NYTimesRSS(ts=ts, fullscreen=args.fullscreen))
-	apps.append(lucidapp.Mandelbrot(ts=ts, fullscreen=args.fullscreen))
-	apps.append(lucidapp.BallBounce(ts=ts, fullscreen=args.fullscreen))
+	apps.append(lucidapp.SlideshowTouch(ts=ts, fullscreen=args.fullscreen, resolution=res))
+	apps.append(lucidapp.SlideshowMET(ts=ts, fullscreen=args.fullscreen, resolution=res))
+	apps.append(lucidapp.GoogleSlider(ts=ts, fullscreen=args.fullscreen, resolution=res))
+	apps.append(lucidapp.ImageSlider(ts=ts, fullscreen=args.fullscreen, resolution=res))
+	apps.append(lucidapp.NYTimesRSS(ts=ts, fullscreen=args.fullscreen, resolution=res))
+	apps.append(lucidapp.Mandelbrot(ts=ts, fullscreen=args.fullscreen, resolution=res))
+	apps.append(lucidapp.BallBounce(ts=ts, fullscreen=args.fullscreen, resolution=res))
 
 	try:
 		apps.append(lucidapp.CVClient(ts=ts, fullscreen=args.fullscreen))
