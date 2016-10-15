@@ -54,8 +54,9 @@ class ImageStream(object):
 
 
 
-class InternetImage:
+class InternetImage(object):
 	def __init__(self, img_path="", keyword_path="", format='cv2', cv_img=None):
+		super(InternetImage, self)
 		self.crop = (400, 300)
 		self.img_path = img_path
 		self.keyword_path = keyword_path
@@ -71,7 +72,6 @@ class InternetImage:
 
 		self.error = False
 		self.pil_img = None
-
 
 
 	def load_image_file(self):
@@ -94,10 +94,14 @@ class InternetImage:
 		try:
 			print 'Try to load url image at:', self.img_path
 			ifile = cStringIO.StringIO(urllib.urlopen(self.img_path).read())
-			print 'Try to OPEN url image.'
 			self.pil_img = Image.open(ifile).convert('RGB')
-			print 'Try to RESIZE url image.'
-			self.pil_img = self.pil_img.resize(self.crop, Image.ANTIALIAS)
+			r = self.crop[0] / float(self.pil_img.size[0])
+			dim = (self.crop[0], int(self.pil_img.size[1] * r))
+			if dim[1] > self.crop[1]:
+				r = self.crop[1] / float(self.pil_img.size[1])
+				dim = (int(self.pil_img.size[0] * r), self.crop[1])				
+			print 'Try to resize image from:', self.pil_img.size, 'to:', dim, 'r', r, 'crops ', self.crop
+			self.pil_img = self.pil_img.resize(dim, Image.ANTIALIAS)
 
 			if 'cv2' == self.format:
 				self.cv_img = np.array(self.pil_img)
