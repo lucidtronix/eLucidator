@@ -103,8 +103,16 @@ class SlideshowMET(LucidApp):
 					self.fill()
 					ty = 100
 					for key in self.cur_image.meta:
-						self.label(key+": "+self.cur_image.meta[key], 440, ty, font_scale=0.45)
+						if key == "Credit Line" or key == "Rights and Reproduction":
+							continue
+						ltext = self.cur_image.meta[key]
+						char_per_line = 40
+						self.label(key+": "+ltext[:char_per_line-len(key)], 440, ty, font_scale=0.5)	
 						ty += 20
+						while len(ltext) > char_per_line:
+							ltext = ltext[char_per_line:]
+							self.label(ltext[:char_per_line], 440, ty, font_scale=0.45)
+							ty += 20
 
 			if self.fading:
 				alpha =	(time()-self.fade_start) / self.fade_time 
