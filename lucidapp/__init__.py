@@ -6,6 +6,7 @@ from TouchScreen import TouchScreen
 from Slideshow import Slideshow
 from SlideshowMET import SlideshowMET
 from SlideshowTouch import SlideshowTouch
+from ImagenetViewer import ImagenetViewer
 from NYTimesRSS import NYTimesRSS
 from BallBounce import BallBounce
 from Mandelbrot import Mandelbrot

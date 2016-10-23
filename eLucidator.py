@@ -89,12 +89,13 @@ if __name__ == '__main__':
 	
 
 	apps.append(lucidapp.SlideshowTouch(ts=ts, fullscreen=args.fullscreen, resolution=res))
+	apps.append(lucidapp.ImagenetViewer(ts=ts, fullscreen=args.fullscreen, resolution=res))
 	apps.append(lucidapp.SlideshowMET(ts=ts, fullscreen=args.fullscreen, resolution=res))
 	apps.append(lucidapp.GoogleSlider(ts=ts, fullscreen=args.fullscreen, resolution=res))
 	apps.append(lucidapp.ImageSlider(ts=ts, fullscreen=args.fullscreen, resolution=res))
 	apps.append(lucidapp.NYTimesRSS(ts=ts, fullscreen=args.fullscreen, resolution=res))
 	apps.append(lucidapp.Mandelbrot(ts=ts, fullscreen=args.fullscreen, resolution=res))
-	apps.append(lucidapp.BallBounce(ts=ts, fullscreen=args.fullscreen, resolution=res))
+	#apps.append(lucidapp.BallBounce(ts=ts, fullscreen=args.fullscreen, resolution=res))
 
 	try:
 		apps.append(lucidapp.CVClient(ts=ts, fullscreen=args.fullscreen))

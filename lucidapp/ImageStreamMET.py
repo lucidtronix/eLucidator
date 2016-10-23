@@ -8,9 +8,9 @@ import sys
 import cv2
 import random
 import numpy as np
-from time import time, sleep
 from PIL import Image
 import urllib2, cStringIO
+from time import time, sleep
 from threading import Thread
 from bs4 import BeautifulSoup
 from cookielib import CookieJar

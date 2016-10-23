@@ -13,7 +13,7 @@ import urllib, cStringIO
 from threading import Thread
 
 class ImageStream(object):
-	def __init__(self, source='dir', format='pygame', cache_path='./'):
+	def __init__(self, source='dir', format='cv2', cache_path='./'):
 		super(ImageStream, self)
 		self.source = source
 		self.format = format
@@ -62,6 +62,7 @@ class InternetImage(object):
 		self.keyword_path = keyword_path
 		self.format = format
 		self.cv_img = cv_img
+		self.scale = 1.0
 		
 		if self.cv_img is None:
 			self.loaded = False
@@ -74,6 +75,12 @@ class InternetImage(object):
 		self.pil_img = None
 
 
+	def load(self):
+		if 'http' in self.img_path:
+			self.load_image_url()
+		else:
+			self.load_image_file()
+
 	def load_image_file(self):
 		try:
 			if self.format == 'pygame':
@@ -83,7 +90,13 @@ class InternetImage(object):
 				self.loaded = True
 			elif self.format == 'cv2':
 				pic = cv2.imread(self.img_path)
-				self.cv_img = cv2.resize(pic, self.crop, interpolation = cv2.INTER_AREA)
+				self.scale = self.crop[0] / float(pic.shape[1])
+				dim = (self.crop[0], int(pic.shape[0] * self.scale))
+				if dim[1] > self.crop[1]:
+					self.scale  = self.crop[1] / float(pic.shape[0])
+					dim = (int(pic.shape[1] * self.scale ), self.crop[1])
+				
+				self.cv_img = cv2.resize(pic, dim, interpolation=cv2.INTER_AREA)
 				self.loaded = True
 		except Exception, e:
 			print 'Image from file Error reading:', self.img_path
@@ -95,12 +108,12 @@ class InternetImage(object):
 			print 'Try to load url image at:', self.img_path
 			ifile = cStringIO.StringIO(urllib.urlopen(self.img_path).read())
 			self.pil_img = Image.open(ifile).convert('RGB')
-			r = self.crop[0] / float(self.pil_img.size[0])
-			dim = (self.crop[0], int(self.pil_img.size[1] * r))
+			self.scale = self.crop[0] / float(self.pil_img.size[0])
+			dim = (self.crop[0], int(self.pil_img.size[1] * self.scale))
 			if dim[1] > self.crop[1]:
-				r = self.crop[1] / float(self.pil_img.size[1])
-				dim = (int(self.pil_img.size[0] * r), self.crop[1])				
-			print 'Try to resize image from:', self.pil_img.size, 'to:', dim, 'r', r, 'crops ', self.crop
+				self.scale  = self.crop[1] / float(self.pil_img.size[1])
+				dim = (int(self.pil_img.size[0] * self.scale ), self.crop[1])
+			print 'Try to resize image from:', self.pil_img.size, 'to:', dim, 'crops ', self.crop, 'scale is', self.scale
 			self.pil_img = self.pil_img.resize(dim, Image.ANTIALIAS)
 
 			if 'cv2' == self.format:
@@ -120,11 +133,6 @@ class InternetImage(object):
 			print 'Error message:', e.message
 			self.error = True
 
-	def load(self):
-		if 'http' in self.img_path:
-			self.load_image_url()
-		else:
-			self.load_image_file()
 
 	def to_surface(self):
 		if self.loaded and self.pil_img:
