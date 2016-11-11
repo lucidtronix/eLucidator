@@ -13,6 +13,7 @@ from time import time
 
 screen_width = 800
 screen_height = 480
+
 class eLucidator(lucidapp.LucidApp):
 	def __init__(self, apps, ts, cache_path='./cache/', fullscreen=False, resolution=(800, 480), icon=None, base_graphics='cv2'):
 		super(eLucidator, self).__init__('eLucidator', cache_path, fullscreen, resolution, icon, base_graphics)#, cache_path='./cache/', fullscreen=fullscreen, resolution=resolution, icon=None, base_graphics=base_graphics)
@@ -102,7 +103,7 @@ if __name__ == '__main__':
 	except:
 		print 'Could not load cv client'
 
-	lucidator = eLucidator(apps, ts=ts, fullscreen=args.fullscreen)
+	lucidator = eLucidator(apps, ts=ts, fullscreen=args.fullscreen, resolution=res)
 	lucidator.run(args.run)
 
 	cv2.destroyAllWindows()

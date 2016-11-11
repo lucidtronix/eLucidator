@@ -55,9 +55,9 @@ class ImageStream(object):
 
 
 class InternetImage(object):
-	def __init__(self, img_path="", keyword_path="", format='cv2', cv_img=None):
+	def __init__(self, img_path="", keyword_path="", crop=(500,500), format='cv2', cv_img=None):
 		super(InternetImage, self)
-		self.crop = (400, 300)
+		self.crop = crop
 		self.img_path = img_path
 		self.keyword_path = keyword_path
 		self.format = format
