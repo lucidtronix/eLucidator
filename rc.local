@@ -21,6 +21,6 @@ if [ "$_IP" ]; then
   printf "My IP address is %s\n" "$_IP"
 fi
 
-python /home/pi/eLucidator/eLucidator.py --fullscreen &
+/usr/bin/python /home/pi/eLucidator/eLucidator.py --fullscreen &
 
 exit 0

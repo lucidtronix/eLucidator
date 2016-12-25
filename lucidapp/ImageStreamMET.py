@@ -88,7 +88,7 @@ class METImage(InternetImage):
 
 
 if __name__ == '__main__':
-	ism = ImageStreamMET((600,480,3))
+	ism = ImageStreamMET()
 	ism.query('436943')
 	while True:
 		if ism.size() > 0:

@@ -71,7 +71,7 @@ class eLucidator(lucidapp.LucidApp):
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
-	parser.add_argument('--fullscreen', dest='fullscreen', action='store_true')
+	parser.add_argument('--fullscreen', dest='fullscreen', action='store_true', default=True)
 	parser.add_argument('--run', dest='run')
 
 	parser.set_defaults(fullscreen=False)

@@ -38,7 +38,7 @@ class SlideshowMET(LucidApp):
 
 		self.cur_image = None
 		self.image_corner = (30,90)
-		self.image_crop = (300,400,3)
+		self.image_crop = (300, 400, 3)
 		self.image_fixed_size = np.zeros(self.image_crop)
 		self.last_image_fixed_size = np.zeros(self.image_crop)
 		self.buttons.append(Button(self, 'more', (460,10,80,40), (50,50,50), self.more))
