@@ -8,6 +8,7 @@ import sys
 import cv2
 import socket
 import pygame
+import defines
 import threading
 import numpy as np
 from PIL import Image
@@ -24,8 +25,8 @@ MSG_LEN = 16
 PORT = 8421
 
 class CVClient(LucidApp):
-	def __init__(self, ts=None, cache_path='./cache/', fullscreen=False, resolution=(800, 400), 
-					icon_path='./icons/cv_client.png', base_graphics='cv2'):
+	def __init__(self, ts=None, cache_path=defines.data_path+'/cache/', fullscreen=False, resolution=(800, 400), 
+					icon_path=defines.data_path+'/icons/cv_client.png', base_graphics='cv2'):
 		super(CVClient, self).__init__('CVClient', cache_path, fullscreen, resolution, icon_path, base_graphics)
 		self.playing = True
 		self.stream = ImageStreamDir()
@@ -38,8 +39,8 @@ class CVClient(LucidApp):
 		self.camera.resolution = (320, 240)
 		self.camera.framerate = 32
 		self.rawCapture = PiRGBArray(self.camera, size=(320, 240))
-		self.faceCascade = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')
-		self.pil_im_to_classify = Image.open('./images/baby.jpg')
+		self.faceCascade = cv2.CascadeClassifier(defines.data_path+'/haarcascade_frontalface_default.xml')
+		self.pil_im_to_classify = Image.open(defines.data_path+'/images/baby.jpg')
 		self.last_face = np.array(self.pil_im_to_classify)
 		self.classifications = []
 
