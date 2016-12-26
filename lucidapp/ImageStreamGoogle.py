@@ -20,7 +20,6 @@ class ImageStreamGoogle(ImageStream):
 		super(ImageStreamGoogle, self).__init__('google', cache_path=cache_path)
 		self.shape = shape
 		self.cache_path = cache_path
-
 		self.image_search_start = search_offset
 		self.num_images = num_images
 		self.developer_key = 'AIzaSyCl7ZHvUAhfJQ8UNdpaR4Hpad02PZwZq0U'
@@ -74,6 +73,9 @@ class ImageStreamGoogle(ImageStream):
 			print 'Error message:', e.message
 			raise
 
+
+
+
 	def google_get_image_results(self, keyword):
 		try:
 			service = build("customsearch", "v1", developerKey=self.developer_key)
@@ -81,7 +83,7 @@ class ImageStreamGoogle(ImageStream):
 				q=keyword,
 				cx=self.cx,
 				searchType='image',
-				num=self.num_images,
+				num=3,
 				imgType='clipart',
 				fileType='jpg',
 				safe= 'off'
@@ -96,6 +98,33 @@ class ImageStreamGoogle(ImageStream):
 			print 'Error executing google search for keyword:', keyword
 			print 'Error message:', e
 			return None
+
+
+	# def google_get_image_results(self, num_images):
+	# 	service = build("customsearch", "v1", developerKey=self.developer_key)
+	# 	print "Try to search"
+	# 	try:
+	# 		res = service.cse().list(
+	# 			q=self.keyword,
+	# 			cx=self.cx,
+	# 			searchType='image',
+	# 			start=self.image_search_start,
+	# 			num=num_images,
+	# 			imgType='clipart',
+	# 			fileType='jpg',
+	# 			safe= 'off'
+	# 		).execute()
+
+	# 		print "executed search", self.image_search_start
+	# 	except Exception, e:
+	# 		print 'Error executing search results for keyword:', self.keyword
+	# 		print 'Error message:', e
+	# 		return None
+	# 	# if not 'items' in res:
+	# 	# 	print 'No result !'
+	# 	# 	return None
+
+	# 	return res['items']
 
 if __name__ == '__main__':
 	service = build("customsearch", "v1", developerKey="AIzaSyCl7ZHvUAhfJQ8UNdpaR4Hpad02PZwZq0U")

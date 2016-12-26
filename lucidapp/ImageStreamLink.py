@@ -22,7 +22,7 @@ imageTypes = ['.jpg', '.jpeg', '.png']
 
 class ImageStreamLink(ImageStream):
 	def __init__(self, url, keyword):
-		super(ImageStreamLink, self).__init__('link', format, None)
+		super(ImageStreamLink, self).__init__('link', None)
 		self.url = url 
 		self.keyword = keyword
 

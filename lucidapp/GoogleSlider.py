@@ -22,8 +22,11 @@ from ImageStreamGoogle import ImageStreamGoogle
 
 class GoogleSlider(LucidApp):
 
-	def __init__(self, ts=None, cache_path=defines.base_path+'cache/', fullscreen=False, resolution=(800, 400), 
-					icon_path=defines.base_path+'icons/google.png'):
+	def __init__(self, ts=None, 
+				cache_path=defines.base_path+'cache/',
+				fullscreen=False,
+				resolution=(800, 400), 
+				icon_path=defines.base_path+'icons/google.png'):
 		super(GoogleSlider, self).__init__('GoogleSlider', cache_path, fullscreen, resolution, icon_path)
 		if ts:
 			self.ts = ts

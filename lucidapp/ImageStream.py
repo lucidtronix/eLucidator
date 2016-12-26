@@ -30,7 +30,7 @@ class ImageStream(object):
 			self.cur_image = (self.cur_image-1) % self.size()
 			return  self.images[self.cur_image]
 		else:
-			return None
+			return InternetImage(cv_img=np.zeros(defines.image_crop))
 
 	def next(self, crop=None):
 		if len(self.images) > 0:
@@ -38,7 +38,7 @@ class ImageStream(object):
 			self.cur_image = (self.cur_image+1) % self.size()
 			return image
 		else:
-			return None
+			return InternetImage(cv_img=np.zeros(defines.image_crop))
 
 	def size(self):
 		return len(self.images)

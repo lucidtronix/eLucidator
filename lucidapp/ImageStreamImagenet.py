@@ -31,7 +31,7 @@ class ImageStreamImagenet(ImageStream):
 		if not os.path.exists(self.cache_path):
 			os.makedirs(self.cache_path)
 
-	def load_val_images(self, limit=135):
+	def load_val_images(self, limit=10):
 		v_img_path = self.imagenet_dir + 'ILSVRC2013_DET_val/'
 		v_xml_path = self.imagenet_dir + 'ILSVRC2013_DET_bbox_val/'
 		vd = sorted(os.listdir(v_img_path))
