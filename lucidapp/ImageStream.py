@@ -7,6 +7,7 @@ import os
 import sys
 import cv2
 import pygame
+import defines
 import numpy as np
 from PIL import Image
 import urllib, cStringIO

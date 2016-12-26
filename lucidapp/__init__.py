@@ -1,4 +1,6 @@
 # Lucid Apps __init__.py
+import defines
+
 from LucidApp import LucidApp, Button
 from ImageSlider import ImageSlider
 from GoogleSlider import GoogleSlider
