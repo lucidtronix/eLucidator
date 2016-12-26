@@ -6,7 +6,6 @@
 import os
 import sys
 import cv2
-import pygame
 import defines
 import threading
 import numpy as np
@@ -21,8 +20,8 @@ from ImageStreamGoogle import ImageStreamGoogle
 
 class ImageSlider(LucidApp):
 	def __init__(self, ts=None, cache_path=defines.base_path+'cache/', fullscreen=False, resolution=(800, 400), 
-					icon_path=defines.base_path+'icons/image_slider.png', base_graphics='cv2'):
-		super(ImageSlider, self).__init__('ImageSlider', cache_path, fullscreen, resolution, icon_path, base_graphics)
+					icon_path=defines.base_path+'icons/image_slider.png'):
+		super(ImageSlider, self).__init__('ImageSlider', cache_path, fullscreen, resolution, icon_path)
 
 		if ts:
 			self.ts = ts

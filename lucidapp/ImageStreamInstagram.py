@@ -6,7 +6,6 @@
 import os
 import sys
 import cv2
-import pygame
 import defines
 import threading
 import numpy as np
@@ -21,8 +20,8 @@ from instagram.client import InstagramAPI
 
 
 class ImageStreamInstagram(ImageStream):
-	def __init__(self, format='pygame', user='', tag='', cache_path=defines.base_path+''):
-		super(ImageStreamInstagram, self).__init__('Instagram', format, cache_path)
+	def __init__(self, user='', tag='', cache_path=defines.base_path+''):
+		super(ImageStreamInstagram, self).__init__('Instagram', cache_path)
 		self.user = user
 		self.tag = tag
 		self.api = self.get_instagram_api()
@@ -132,19 +131,6 @@ class InstagramMedia:
 		return img_file
 
 	def url_to_image(self, url):
-		#try:
 		print("Try to load image:" + url)
 		resp = ur.urlopen(url)
 		self.pil_image = Image.open(BytesIO(resp.read()))
-
-		# except Exception, e:
-		# 	print "URL to image unexpected error:", str(e)
-		# 	raise	
-
-	def to_surface(self):
-		mode = self.pil_image.mode
-		size = self.pil_image.size
-		data = self.pil_image.tostring()
-		surface = pygame.image.fromstring(data, size, mode)
-		return surface
-

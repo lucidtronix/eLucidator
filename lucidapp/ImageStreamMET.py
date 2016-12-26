@@ -19,8 +19,8 @@ from ImageStream import ImageStream, InternetImage
 
 
 class ImageStreamMET(ImageStream):
-	def __init__(self, cache_path=defines.base_path+'cache/met/', format='cv2'):
-		super(ImageStreamMET, self).__init__('MET', format=format, cache_path=cache_path)
+	def __init__(self, cache_path=defines.base_path+'cache/met/'):
+		super(ImageStreamMET, self).__init__('MET', cache_path=cache_path)
 		self.cache_path = cache_path
 	
 		self.favorites = ['435868', '438814', '436703', '486842', '435896', '437397', '437871', '437869', '437881', '437881',
