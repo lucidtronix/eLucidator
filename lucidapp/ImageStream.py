@@ -121,10 +121,10 @@ class InternetImage(object):
 		if self.loaded and self.cv_img is not None:
 			return self.cv_img
 		elif self.error:
-			imge = cv2.imread(defines.base_path+'/images/cat.jpg')
+			imge = cv2.imread(defines.base_path+'images/cat.jpg')
 			return cv2.resize(imge, self.crop, interpolation=cv2.INTER_AREA)
 		else:
-			imgl = cv2.imread(defines.base_path+'/images/dog.jpg')
+			imgl = cv2.imread(defines.base_path+'images/dog.jpg')
 			return cv2.resize(imgl, self.crop, interpolation=cv2.INTER_AREA)
 
 

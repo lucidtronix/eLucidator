@@ -39,7 +39,7 @@ class CVClient(LucidApp):
 		self.camera.framerate = 32
 		self.rawCapture = PiRGBArray(self.camera, size=(320, 240))
 		self.faceCascade = cv2.CascadeClassifier(defines.base_path+'/haarcascade_frontalface_default.xml')
-		self.pil_im_to_classify = Image.open(defines.base_path+'/images/baby.jpg')
+		self.pil_im_to_classify = Image.open(defines.base_path+'images/baby.jpg')
 		self.last_face = np.array(self.pil_im_to_classify)
 		self.classifications = []
 
