@@ -8,6 +8,9 @@ sudo apt-get update \
 && sudo apt-get -y install libgtk2.0-dev \
 && sudo apt-get -y install libatlas-base-dev gfortran \
 && sudo apt-get -y install python2.7-dev python3-dev \
+&& sudo mkdir ~/.config/autostart/ \
+&& sudo cp ./hello.desktop ~/.config/autostart/ \
+&& sudo cp ./rc.local /etc/rc.local \
 && cd ~ \
 && wget -O opencv.zip https://github.com/Itseez/opencv/archive/3.1.0.zip \
 && unzip opencv.zip \
@@ -31,7 +34,6 @@ sudo apt-get update \
 && sudo pip install --upgrade feedparser \
 && sudo pip install --upgrade beautifulsoup4 \
 && sudo pip install --upgrade google-api-python-client \
-&& sudo cp ./rc.local /etc/rc.local \
-&& sudo git config --global user.email "lucidtronix@gmail.com" \
-&& sudo git config --global user.name "Samwell Freeman" \
+&& git config --global user.email "lucidtronix@gmail.com" \
+&& git config --global user.name "Samwell Freeman" \
 && sudo shutdown -r now
