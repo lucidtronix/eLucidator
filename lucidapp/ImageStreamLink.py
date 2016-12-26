@@ -7,7 +7,6 @@ import os
 import re
 import sys
 import cv2
-import pygame
 import defines
 import urllib2
 import threading
@@ -22,8 +21,8 @@ from ImageStream import ImageStream, InternetImage
 imageTypes = ['.jpg', '.jpeg', '.png']
 
 class ImageStreamLink(ImageStream):
-	def __init__(self, url, keyword, format='cv2'):
-		super(ImageStreamLink, self).__init__('link', format, None)
+	def __init__(self, url, keyword):
+		super(ImageStreamLink, self).__init__('link', None)
 		self.url = url 
 		self.keyword = keyword
 

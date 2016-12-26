@@ -7,7 +7,6 @@ import os
 import sys
 import cv2
 import socket
-import pygame
 import defines
 import threading
 import numpy as np
@@ -26,8 +25,8 @@ PORT = 8421
 
 class CVClient(LucidApp):
 	def __init__(self, ts=None, cache_path=defines.base_path+'/cache/', fullscreen=False, resolution=(800, 400), 
-					icon_path=defines.base_path+'/icons/cv_client.png', base_graphics='cv2'):
-		super(CVClient, self).__init__('CVClient', cache_path, fullscreen, resolution, icon_path, base_graphics)
+					icon_path=defines.base_path+'/icons/cv_client.png'):
+		super(CVClient, self).__init__('CVClient', cache_path, fullscreen, resolution, icon_path)
 		self.playing = True
 		self.stream = ImageStreamDir()
 		if ts:

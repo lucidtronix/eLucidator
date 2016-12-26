@@ -5,7 +5,6 @@
 
 import cv2
 import math
-import pygame
 from time import time
 
 class TouchScreen:
@@ -23,22 +22,17 @@ class TouchScreen:
 		self.easing = False
 		self.double_tap = False
 		self.double_tap_time = 0
-		self.base_graphics = 'cv2'
 		self.mx = 0
 		self.my = 0
 		self.b1 = False
-		if self.base_graphics == 'cv2':
-			mouse_params = [self]
-			cv2.setMouseCallback('canvas', mouse_callback_cv, mouse_params)
+
+		mouse_params = [self]
+		cv2.setMouseCallback('canvas', mouse_callback_cv, mouse_params)
 
 	def update(self):
-		if self.base_graphics == 'pygame':
-			mx, my = pygame.mouse.get_pos()
-			b1, b2, b3 = pygame.mouse.get_pressed()
-		elif self.base_graphics == 'cv2':
-			mx = self.mx
-			my = self.my
-			b1 = self.b1
+		mx = self.mx
+		my = self.my
+		b1 = self.b1
 		if b1:
 			self.double_tap = False
 			if not self.sliding:

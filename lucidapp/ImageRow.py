@@ -7,7 +7,6 @@
 import os
 import sys
 import cv2
-import pygame
 import random
 import argparse
 import threading

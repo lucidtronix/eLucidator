@@ -6,7 +6,6 @@
 import os
 import sys
 import cv2
-import pygame
 import defines
 import threading
 import numpy as np
@@ -22,8 +21,8 @@ from ImageStreamGoogle import ImageStreamGoogle
 
 class FaceDetector(LucidApp):
 	def __init__(self, ts=None, cache_path=defines.base_path+'cache/', fullscreen=False, resolution=(800, 400), 
-					icon_path=defines.base_path+'icons/face_detection.png', base_graphics='cv2'):
-		super(FaceDetector, self).__init__('FaceDetector', cache_path, fullscreen, resolution, icon_path, base_graphics)
+					icon_path=defines.base_path+'icons/face_detection.png'):
+		super(FaceDetector, self).__init__('FaceDetector', cache_path, fullscreen, resolution, icon_path)
 		self.playing = True
 		self.stream = ImageStreamDir()
 		if ts:

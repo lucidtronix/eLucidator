@@ -7,7 +7,6 @@ import os
 import sys
 import cv2
 import math
-import pygame
 import defines
 import threading
 import numpy as np

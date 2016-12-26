@@ -6,7 +6,6 @@
 import os
 import sys
 import cv2
-import pygame
 import random
 import defines
 import argparse
@@ -23,9 +22,12 @@ from ImageStreamGoogle import ImageStreamGoogle
 
 class GoogleSlider(LucidApp):
 
-	def __init__(self, ts=None, cache_path=defines.base_path+'cache/', fullscreen=False, resolution=(800, 400), 
-					icon_path=defines.base_path+'icons/google.png', base_graphics='cv2'):
-		super(GoogleSlider, self).__init__('GoogleSlider', cache_path, fullscreen, resolution, icon_path, base_graphics)
+	def __init__(self, ts=None, 
+				cache_path=defines.base_path+'cache/',
+				fullscreen=False,
+				resolution=(800, 400), 
+				icon_path=defines.base_path+'icons/google.png'):
+		super(GoogleSlider, self).__init__('GoogleSlider', cache_path, fullscreen, resolution, icon_path)
 		if ts:
 			self.ts = ts
 		else:
@@ -50,38 +52,30 @@ class GoogleSlider(LucidApp):
 		pass
 
 	def handle_keys(self):
-		if self.base_graphics == 'pygame':
-			for event in pygame.event.get():
-				if (event.type == pygame.QUIT):
-					pygame.quit()
-					return -1
-				elif (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
-					pygame.quit()
-					return -1
-		elif self.base_graphics == 'cv2':
-			char = cv2.waitKey(1) & 0xFF
-			if char > 31 and char < 127:
-				self.input_string += str(chr(char))
-			elif char == 27: # Escape
-				return -1
-			elif char == 8: # Delete
-				if len(self.input_string):
-					self.input_string = self.input_string[:-1]
-			elif char == 10: # Enter/return key
-				if len(input_string):
-					self.stream.add_keyword(self.keywords[self.cur_keyword])
-					self.stream.start_query()
-			elif char == 9: # Tab
-				print 'tab'
-			elif char == 226: # Right shift
-				print 'right shift'
+		char = cv2.waitKey(1) & 0xFF
+		if char > 31 and char < 127:
+			self.input_string += str(chr(char))
+		elif char == 27: # Escape
+			return -1
+		elif char == 8: # Delete
+			if len(self.input_string):
+				self.input_string = self.input_string[:-1]
+		elif char == 10: # Enter/return key
+			if len(input_string):
+				self.stream.add_keyword(self.keywords[self.cur_keyword])
+				self.stream.start_query()
+		elif char == 9: # Tab
+			print 'tab'
+		elif char == 226: # Right shift
+			print 'right shift'
 
-			elif char == 227: # Left Ctrl
-				print 'left ctrl'
-			elif char == 228: # Right Ctrl
-				print 'right ctrl'
-			elif char != 255:
-				print 'special char:', char
+		elif char == 227: # Left Ctrl
+			print 'left ctrl'
+		elif char == 228: # Right Ctrl
+			print 'right ctrl'
+		elif char != 255:
+			print 'special char:', char
+			
 		return char
 
 	def run(self):

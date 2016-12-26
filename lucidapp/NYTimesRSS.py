@@ -7,7 +7,6 @@ import os
 import re
 import sys
 import cv2
-import pygame
 import random
 import urllib2
 import defines
@@ -28,8 +27,8 @@ from ImageStreamLink import ImageStreamLink
 
 class NYTimesRSS(LucidApp):
 
-	def __init__(self, ts=None, cache_path=defines.base_path+'cache/', fullscreen=False, resolution=(800, 400), icon_path=defines.base_path+'icons/nytimes.png', base_graphics='cv2'):
-		super(NYTimesRSS, self).__init__('NYTimesRSS', cache_path, fullscreen, resolution, icon_path, base_graphics)
+	def __init__(self, ts=None, cache_path=defines.base_path+'cache/', fullscreen=False, resolution=(800, 400), icon_path=defines.base_path+'icons/nytimes.png'):
+		super(NYTimesRSS, self).__init__('NYTimesRSS', cache_path, fullscreen, resolution, icon_path)
 		if ts:
 			self.ts = ts
 		else:
