@@ -11,6 +11,13 @@ sudo apt-get update \
 && sudo mkdir ~/.config/autostart/ \
 && sudo cp ./hello.desktop ~/.config/autostart/ \
 && sudo cp ./rc.local /etc/rc.local \
+&& sudo cp ./config_touchscreen.txt /boot/config.txt \
+# set audio output to headphone jack
+&& sudo amixer cset numid=3 1 \
+&& sudo mkdir /etc/X11/xorg.conf.d \
+&& sudo cp ./99-calibration /etc/X11/xorg.conf.d/ \
+&& git config --global user.email "lucidtronix@gmail.com" \
+&& git config --global user.name "Samwell Freeman" \
 && cd ~ \
 && wget -O opencv.zip https://github.com/Itseez/opencv/archive/3.1.0.zip \
 && unzip opencv.zip \
@@ -23,17 +30,10 @@ sudo apt-get update \
 && make -j4 \
 && sudo make install \
 && sudo ldconfig \
-&& sudo cp ./config_touchscreen.txt /boot/config.txt \
-# set audio output to headphone jack
-&& sudo amixer cset numid=3 1 \
-&& sudo mkdir /etc/X11/xorg.conf.d \
-&& sudo cp ./99-calibration /etc/X11/xorg.conf.d/ \
 && sudo apt-get -y install arduino \
 && sudo pip install --upgrade python-instagram \
 && sudo pip install --upgrade pi3d \
 && sudo pip install --upgrade feedparser \
 && sudo pip install --upgrade beautifulsoup4 \
 && sudo pip install --upgrade google-api-python-client \
-&& git config --global user.email "lucidtronix@gmail.com" \
-&& git config --global user.name "Samwell Freeman" \
 && sudo shutdown -r now
