@@ -8,6 +8,7 @@ import sys
 import cv2
 import math
 import pygame
+import defines
 import threading
 import numpy as np
 from time import time
@@ -18,8 +19,8 @@ from TouchScreen import TouchScreen
 from ImageStreamDir import ImageStreamDir
 
 class Screensaver(LucidApp):
-	def __init__(self, ts=None, cache_path='./cache/', fullscreen=False, 
-					resolution=(800, 400), icon_path='./icons/screensaver.png'):
+	def __init__(self, ts=None, cache_path=defines.base_path+'cache/', fullscreen=False, 
+					resolution=(800, 400), icon_path=defines.base_path+'icons/screensaver.png'):
 		
 		super(Screensaver, self).__init__('Screensaver', cache_path, fullscreen, resolution, icon_path)
 		

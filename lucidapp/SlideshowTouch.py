@@ -7,6 +7,7 @@ import os
 import sys
 import cv2
 import pygame
+import defines
 import threading
 import numpy as np
 from time import time
@@ -20,8 +21,8 @@ from ImageStreamDir import ImageStreamDir
 from ImageStreamGoogle import ImageStreamGoogle
 
 class SlideshowTouch(LucidApp):
-	def __init__(self, ts=None, cache_path='./cache/', fullscreen=False, resolution=(800, 400), 
-					icon_path='./icons/slideshow.png', base_graphics='cv2'):
+	def __init__(self, ts=None, cache_path=defines.base_path+'cache/', fullscreen=False, resolution=(800, 400), 
+					icon_path=defines.base_path+'icons/slideshow.png', base_graphics='cv2'):
 		super(SlideshowTouch, self).__init__('SlideshowTouch', cache_path, fullscreen, resolution, icon_path, base_graphics)
 		self.playing = True
 		self.stream = ImageStreamDir(load_strategy='all')

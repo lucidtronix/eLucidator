@@ -7,6 +7,7 @@ import os
 import sys
 import cv2
 import pygame
+import defines
 import threading
 import numpy as np
 from time import time
@@ -17,8 +18,8 @@ from LucidApp import LucidApp, Button
 from ImageStreamMET import ImageStreamMET
 
 class SlideshowMET(LucidApp):
-	def __init__(self, ts=None, cache_path='./cache/', fullscreen=False, resolution=(800, 400), 
-					icon_path='./icons/MET.png', base_graphics='cv2'):
+	def __init__(self, ts=None, cache_path=defines.base_path+'cache/', fullscreen=False, resolution=(800, 400), 
+					icon_path=defines.base_path+'icons/MET.png', base_graphics='cv2'):
 		super(SlideshowMET, self).__init__('SlideshowMET', cache_path, fullscreen, resolution, icon_path, base_graphics)
 		self.playing = True
 		self.stream = ImageStreamMET()

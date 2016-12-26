@@ -7,6 +7,7 @@ import os
 import sys
 import cv2
 import pygame
+import defines
 import threading
 import numpy as np
 from PIL import Image
@@ -20,8 +21,8 @@ from ImageStreamDir import ImageStreamDir
 from ImageStreamGoogle import ImageStreamGoogle
 
 class FaceDetector(LucidApp):
-	def __init__(self, ts=None, cache_path='./cache/', fullscreen=False, resolution=(800, 400), 
-					icon_path='./icons/face_detection.png', base_graphics='cv2'):
+	def __init__(self, ts=None, cache_path=defines.base_path+'cache/', fullscreen=False, resolution=(800, 400), 
+					icon_path=defines.base_path+'icons/face_detection.png', base_graphics='cv2'):
 		super(FaceDetector, self).__init__('FaceDetector', cache_path, fullscreen, resolution, icon_path, base_graphics)
 		self.playing = True
 		self.stream = ImageStreamDir()
@@ -33,7 +34,7 @@ class FaceDetector(LucidApp):
 		self.camera.resolution = (320, 240)
 		self.camera.framerate = 32
 		self.rawCapture = PiRGBArray(self.camera, size=(320, 240))
-		self.faceCascade = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')
+		self.faceCascade = cv2.CascadeClassifier(defines.base_path+'haarcascade_frontalface_default.xml')
 
 		# allow the camera to warmup
 		sleep(0.2)

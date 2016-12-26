@@ -7,6 +7,7 @@ import os
 import sys
 import cv2
 import pygame
+import defines
 import threading
 import numpy as np
 from time import time
@@ -17,7 +18,7 @@ from LucidApp import LucidApp, Button
 from ImageStreamImagenet import ImageStreamImagenet
 
 class ImagenetViewer(LucidApp):
-	def __init__(self, ts=None, cache_path='./cache/', fullscreen=False, resolution=(800, 800), icon_path='./icons/imagenet.png'):
+	def __init__(self, ts=None, cache_path=defines.base_path+'cache/', fullscreen=False, resolution=(800, 800), icon_path=defines.base_path+'icons/imagenet.png'):
 		super(ImagenetViewer, self).__init__('ImagenetViewer', cache_path, fullscreen, resolution, icon_path)
 		self.playing = True
 		self.stream = ImageStreamImagenet()

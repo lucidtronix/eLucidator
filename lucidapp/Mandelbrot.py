@@ -8,6 +8,7 @@ import sys
 import cv2
 import math
 import pygame
+import defines
 import colorsys
 import threading
 import numpy as np
@@ -19,8 +20,8 @@ from TouchScreen import TouchScreen
 from ImageStreamDir import ImageStreamDir
 
 class Mandelbrot(LucidApp):
-	def __init__(self, ts=None, cache_path='./cache/', fullscreen=False, 
-					resolution=(800, 400), icon_path='./icons/Mandelbrot.png'):
+	def __init__(self, ts=None, cache_path=defines.base_path+'cache/', fullscreen=False, 
+					resolution=(800, 400), icon_path=defines.base_path+'icons/Mandelbrot.png'):
 		
 		super(Mandelbrot, self).__init__('Mandelbrot', cache_path, fullscreen, resolution, icon_path)
 		

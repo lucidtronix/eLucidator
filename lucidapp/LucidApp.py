@@ -7,6 +7,7 @@ import os
 import sys
 import cv2
 import pygame
+import defines
 import threading
 import numpy as np
 from pygame import *
@@ -16,8 +17,8 @@ from time import time
 import urllib, cStringIO
 
 class LucidApp(object):
-	def __init__(self, name, cache_path='./cache/', fullscreen=False, resolution=(400, 300), 
-				icon_path='./icons/default_icon.png', base_graphics='cv2'):
+	def __init__(self, name, cache_path=defines.base_path+'cache/', fullscreen=False, resolution=(400, 300), 
+				icon_path=defines.base_path+'icons/default_icon.png', base_graphics='cv2'):
 		super(LucidApp, self)
 		self.name = name 
 		self.cache_path = cache_path

@@ -3,15 +3,16 @@
 # LucidTronix, June 2016
 
 import os
-from time import time
 import pygame
+import defines
 import pygame.ftfont
+from time import time
 
 def write_text(text, x, y, surface, font, size=1, color=(255,255,255)):
 	label = font.render(text, size, color)
 	surface.blit(label, (x, y))
 
-def run(images_path =defines.data_path+'/images/', fullscreen=True):
+def run(images_path =defines.base_path+'/images/', fullscreen=True):
 	imgs = os.listdir(images_path)
 	pyimgs = []
 	for img in imgs:

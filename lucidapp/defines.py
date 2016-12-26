@@ -3,4 +3,4 @@
 # Samwell Freeman
 
 base_path = './'
-base_path = '/home/pi/eLucidator/'
+#base_path = '/home/pi/eLucidator/'

@@ -8,6 +8,7 @@ import re
 import sys
 import cv2
 import pygame
+import defines
 import urllib2
 import threading
 import feedparser
@@ -31,7 +32,7 @@ class ImageStreamLink(ImageStream):
 
 		self.loaded = [False for _ in self.img_links]
 
-		self.keyword_path ='./cache/link/' + self.keyword
+		self.keyword_path =defines.base_path+'cache/link/' + self.keyword
 		if not os.path.exists(self.keyword_path):
 			os.makedirs(self.keyword_path)
 

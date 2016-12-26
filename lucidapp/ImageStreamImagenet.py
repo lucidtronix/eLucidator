@@ -7,6 +7,7 @@ import re
 import sys
 import cv2
 import random
+import defines
 import numpy as np
 from PIL import Image
 import urllib2, cStringIO
@@ -18,7 +19,7 @@ from ImageStream import ImageStream, InternetImage
 
 
 class ImageStreamImagenet(ImageStream):
-	def __init__(self, cache_path='./cache/imagenet/'):
+	def __init__(self, cache_path=defines.base_path+'cache/imagenet/'):
 		super(ImageStreamImagenet, self).__init__('Imagenet', cache_path=cache_path)
 	
 		self.ids = []

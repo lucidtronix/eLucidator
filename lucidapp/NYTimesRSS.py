@@ -10,6 +10,7 @@ import cv2
 import pygame
 import random
 import urllib2
+import defines
 import argparse
 import threading
 import feedparser
@@ -27,7 +28,7 @@ from ImageStreamLink import ImageStreamLink
 
 class NYTimesRSS(LucidApp):
 
-	def __init__(self, ts=None, cache_path='./cache/', fullscreen=False, resolution=(800, 400), icon_path='./icons/nytimes.png', base_graphics='cv2'):
+	def __init__(self, ts=None, cache_path=defines.base_path+'cache/', fullscreen=False, resolution=(800, 400), icon_path=defines.base_path+'icons/nytimes.png', base_graphics='cv2'):
 		super(NYTimesRSS, self).__init__('NYTimesRSS', cache_path, fullscreen, resolution, icon_path, base_graphics)
 		if ts:
 			self.ts = ts
@@ -112,7 +113,7 @@ class Article:
 		self.keyword = self.feed.title[:12].replace(' ', '_')
 
 
-		self.keyword_path ='./cache/news/' + self.keyword
+		self.keyword_path =defines.base_path+'cache/news/' + self.keyword
 		if not os.path.exists(self.keyword_path):
 			os.makedirs(self.keyword_path)
 

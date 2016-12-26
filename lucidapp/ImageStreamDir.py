@@ -7,6 +7,7 @@ import os
 import sys
 import cv2
 import pygame
+import defines
 import threading
 import numpy as np
 from PIL import Image
@@ -16,7 +17,7 @@ from ImageStream import ImageStream, InternetImage
 imageTypes = ['.jpg', '.jpeg', '.png']
 
 class ImageStreamDir(ImageStream):
-	def __init__(self, load_strategy='paths', format='cv2', dir_path=defines.data_path+'/images/'):
+	def __init__(self, load_strategy='paths', format='cv2', dir_path=defines.base_path+'/images/'):
 		super(ImageStreamDir, self).__init__('dir', format, None)
 		self.dir_path = dir_path
 		self.load_strategy = load_strategy

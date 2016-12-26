@@ -6,6 +6,7 @@ import os
 import sys
 import cv2
 import pygame
+import defines
 import numpy as np
 from time import time
 from PIL import Image
@@ -16,7 +17,7 @@ from ImageStream import ImageStream, InternetImage
 
 
 class ImageStreamGoogle(ImageStream):
-	def __init__(self, shape, source, cache_path='./cache/', format='pygame', keyword='fractal', num_images=3, search_offset=0, force_save=False):
+	def __init__(self, shape, source, cache_path=defines.base_path+'cache/', format='pygame', keyword='fractal', num_images=3, search_offset=0, force_save=False):
 		super(ImageStreamGoogle, self).__init__('google', format=format, cache_path=cache_path)
 		self.shape = shape
 		self.cache_path = cache_path

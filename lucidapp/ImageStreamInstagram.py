@@ -7,6 +7,7 @@ import os
 import sys
 import cv2
 import pygame
+import defines
 import threading
 import numpy as np
 import urllib as ur
@@ -20,7 +21,7 @@ from instagram.client import InstagramAPI
 
 
 class ImageStreamInstagram(ImageStream):
-	def __init__(self, format='pygame', user='', tag='', cache_path='./'):
+	def __init__(self, format='pygame', user='', tag='', cache_path=defines.base_path+''):
 		super(ImageStreamInstagram, self).__init__('Instagram', format, cache_path)
 		self.user = user
 		self.tag = tag

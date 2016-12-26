@@ -13,7 +13,7 @@ import urllib, cStringIO
 from threading import Thread
 
 class ImageStream(object):
-	def __init__(self, source='dir', format='cv2', cache_path='./'):
+	def __init__(self, source='dir', format='cv2', cache_path=defines.base_path+''):
 		super(ImageStream, self)
 		self.source = source
 		self.format = format
@@ -32,7 +32,7 @@ class ImageStream(object):
 			return  self.images[self.cur_image]
 		elif self.format == 'pygame':
 			print 'returning dog as pygame'
-			return InternetImage(defines.data_path+'/images/dog.jpg', defines.data_path+'/images/')
+			return InternetImage(defines.base_path+'/images/dog.jpg', defines.base_path+'/images/')
 		else:
 			print 'next failed returning None.', self.format
 			return None
@@ -44,7 +44,7 @@ class ImageStream(object):
 			return image
 		elif self.format == 'pygame':
 			print 'returning dog as pygame'
-			return InternetImage(defines.data_path+'/images/dog.jpg', defines.data_path+'/images/')
+			return InternetImage(defines.base_path+'/images/dog.jpg', defines.base_path+'/images/')
 		else:
 			print 'next failed returning None.', self.format
 			return None
@@ -142,18 +142,18 @@ class InternetImage(object):
 			surface = pygame.image.fromstring(data, size, mode)
 			return surface
 		elif self.error:
-			return pygame.image.load(defines.data_path+'/images/cat.jpg')
+			return pygame.image.load(defines.base_path+'/images/cat.jpg')
 		else:
-			return pygame.image.load(defines.data_path+'/images/dog.jpg')
+			return pygame.image.load(defines.base_path+'/images/dog.jpg')
 
 	def to_array(self):
 		if self.loaded and self.cv_img is not None:
 			return self.cv_img
 		elif self.error:
-			imge = cv2.imread(defines.data_path+'/images/cat.jpg')
+			imge = cv2.imread(defines.base_path+'/images/cat.jpg')
 			return cv2.resize(imge, self.crop, interpolation=cv2.INTER_AREA)
 		else:
-			imgl = cv2.imread(defines.data_path+'/images/dog.jpg')
+			imgl = cv2.imread(defines.base_path+'/images/dog.jpg')
 			return cv2.resize(imgl, self.crop, interpolation=cv2.INTER_AREA)
 
 

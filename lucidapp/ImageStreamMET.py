@@ -7,6 +7,7 @@ import re
 import sys
 import cv2
 import random
+import defines
 import numpy as np
 from PIL import Image
 import urllib2, cStringIO
@@ -18,7 +19,7 @@ from ImageStream import ImageStream, InternetImage
 
 
 class ImageStreamMET(ImageStream):
-	def __init__(self, cache_path='./cache/met/', format='cv2'):
+	def __init__(self, cache_path=defines.base_path+'cache/met/', format='cv2'):
 		super(ImageStreamMET, self).__init__('MET', format=format, cache_path=cache_path)
 		self.cache_path = cache_path
 	
