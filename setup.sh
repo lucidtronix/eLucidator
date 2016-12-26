@@ -32,4 +32,6 @@ sudo apt-get update \
 && sudo pip install --upgrade beautifulsoup4 \
 && sudo pip install --upgrade google-api-python-client \
 && sudo cp ./rc.local /etc/rc.local \
+&& sudo git config --global user.email "lucidtronix@gmail.com" \
+&& sudo git config --global user.name "Samwell Freeman" \
 && sudo shutdown -r now

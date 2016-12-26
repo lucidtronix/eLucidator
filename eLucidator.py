@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # eLucidator.py
 # Python Skin for Lucidtronix' eLucidator
 # Meta-file which displays and calls LucidApps

@@ -1,0 +1,3 @@
+[Desktop Entry]
+Exec=lxterminal -e "/home/pi/eLucidator/eLucidator.py --fullscreen"
+Type=Application
