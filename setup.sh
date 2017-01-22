@@ -8,11 +8,10 @@ sudo apt-get update \
 && sudo apt-get -y install libgtk2.0-dev \
 && sudo apt-get -y install libatlas-base-dev gfortran \
 && sudo apt-get -y install python2.7-dev python3-dev \
-&& sudo mkdir ~/.config/autostart/ \
-&& sudo cp ./hello.desktop ~/.config/autostart/ \
+&& sudo mkdir /home/pi/.config/autostart/ \
+&& sudo cp ./hello.desktop /home/pi/.config/autostart/ \
 && sudo cp ./rc.local /etc/rc.local \
 && sudo cp ./config_touchscreen.txt /boot/config.txt \
-# set audio output to headphone jack
 && sudo amixer cset numid=3 1 \
 && sudo mkdir /etc/X11/xorg.conf.d \
 && sudo cp ./99-calibration /etc/X11/xorg.conf.d/ \
