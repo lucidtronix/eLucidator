@@ -46,6 +46,8 @@ class SlideshowTouch(LucidApp):
 		self.buttons.append(self.play_pause_btn)
 
 		self.row = ImageRow(self, self.stream, self.ts, self.resolution)
+		self.fade_buffer1 = np.zeros((400,400,3))
+		self.fade_buffer2 = np.zeros((400,400,3))
 
 	def next_image(self):
 		self.last_image = self.cur_image
@@ -98,6 +100,11 @@ class SlideshowTouch(LucidApp):
 			if self.playing:
 				if time()-self.last_update > self.delay:
 					self.next_image()
+					if self.last_image:
+						old1 = self.last_image.to_array()
+						self.fade_buffer1[:old1.shape[0],:old1.shape[1]] = old1
+						new2 = self.cur_image.to_array()
+						self.fade_buffer2[:new2.shape[0],:new2.shape[1]] = new2
 
 				if self.fading:
 					alpha =	(time()-self.fade_start) / self.fade_time 
@@ -105,7 +112,7 @@ class SlideshowTouch(LucidApp):
 						self.fading = False
 
 					beta = (1.0 - alpha)
-					blend = cv2.addWeighted(self.last_image.to_array(), beta, self.cur_image.to_array(), alpha, 0.0)
+					blend = cv2.addWeighted(self.fade_buffer1, beta, self.fade_buffer2, alpha, 0.0)
 					self.row.images[self.row.cur_image] = InternetImage(cv_img=blend)
 					
 			self.draw()
