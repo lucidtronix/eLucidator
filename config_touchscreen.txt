@@ -74,3 +74,6 @@ hdmi_cvt 800 480 60 6 0 0 0
 # Touch screen
 dtparam=spi=on
 dtoverlay=ads7846,penirq=25,speed=10000,penirq_pull=2,xohms=150
+
+# power down monitor when lockscreen enabled
+hdmi_blanking=1

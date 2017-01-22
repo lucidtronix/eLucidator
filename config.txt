@@ -57,3 +57,6 @@ dtparam=audio=on
 
 # NOOBS Auto-generated Settings:
 hdmi_force_hotplug=1
+
+# power down monitor when lockscreen enabled
+hdmi_blanking=1

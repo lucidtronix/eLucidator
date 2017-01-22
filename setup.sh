@@ -16,6 +16,7 @@ sudo apt-get update \
 && sudo amixer cset numid=3 1 \
 && sudo mkdir /etc/X11/xorg.conf.d \
 && sudo cp ./99-calibration /etc/X11/xorg.conf.d/ \
+&& sudo cp ./autostart ~/.config/lxsession/LXDE-pi/ \
 && git config --global user.email "lucidtronix@gmail.com" \
 && git config --global user.name "Samwell Freeman" \
 && cd ~ \
