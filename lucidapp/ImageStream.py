@@ -46,14 +46,15 @@ class ImageStream(object):
 
 
 class InternetImage(object):
-	def __init__(self, img_path="", keyword_path="", crop=(400,300), cv_img=None):
+	def __init__(self, img_path="", keyword_path="", crop=(400,300), cv_img=None, meta={}):
 		super(InternetImage, self)
 		self.crop = crop
 		self.img_path = img_path
 		self.keyword_path = keyword_path
 		self.cv_img = cv_img
 		self.scale = 1.0
-		
+		self.meta = meta
+
 		if self.cv_img is None:
 			self.loaded = False
 			lt = Thread(target=self.load)
