@@ -59,7 +59,6 @@ class ImageStreamImagenet(ImageStream):
 					break
 			except:
 				print "Error... xml missing bounding box maybe?", xml_file, ' bs xml:', bs_xml, ' meta', meta_data
-				continue
 
 
 

@@ -128,11 +128,11 @@ class ImagenetViewer(LucidApp):
 				self.show_image_cv(blend, self.image_corner)
 			elif self.cur_image:
 				s = self.cur_image.scale
-				pt1 = (int(s*self.cur_image.meta["xmin"]), int(s*self.cur_image.meta["ymin"]))
-				pt2 = (int(s*self.cur_image.meta["xmax"]), int(s*self.cur_image.meta["ymax"]))
-				#print 'points n shapes', pt1, pt2, self.cur_image.to_array().shape, 'scale:', s
-				cv2.rectangle(self.cur_image.to_array(), pt1, pt2, (40, 250, 20))
-				self.show_image(self.cur_image, self.image_corner)
+				# pt1 = (int(s*self.cur_image.meta["xmin"]), int(s*self.cur_image.meta["ymin"]))
+				# pt2 = (int(s*self.cur_image.meta["xmax"]), int(s*self.cur_image.meta["ymax"]))
+				# #print 'points n shapes', pt1, pt2, self.cur_image.to_array().shape, 'scale:', s
+				# cv2.rectangle(self.cur_image.to_array(), pt1, pt2, (40, 250, 20))
+				# self.show_image(self.cur_image, self.image_corner)
 
 
 			self.draw()

@@ -8,9 +8,10 @@
 import os
 import sys
 import cv2
+import time
+import random
 import argparse
 import lucidapp
-from time import time
 
 screen_width = 800
 screen_height = 480
@@ -22,7 +23,8 @@ class eLucidator(lucidapp.LucidApp):
 		self.init_app_buttons()
 
 		self.ts = ts
-		self.redraw = True	
+		self.redraw = True
+		self.timer = time.time()
 
 	def __str__(self):
 		return super(eLucidator, self).__str__() + 'eLucidator'
@@ -34,14 +36,21 @@ class eLucidator(lucidapp.LucidApp):
 		pass
 
 	def init_app_buttons(self):
-		bx = 10
+		bx = bx_start = 10
 		by = 70
 		bw = 250
 		bh = 40
 
 		for app in self.apps:
+			if bx+app.button_width() > screen_width:
+				bx = bx_start
+				by += 55
+				if by+bh > screen_height:
+					continue
+
 			self.buttons.append(lucidapp.Button(self, str(app), (bx,by,bw,bh), (150,150,150), app.run, app.icon))
-			by += 55
+			bx += app.button_width()
+			
 
 	def run(self, run_app=""):
 		for app in self.apps:
@@ -50,23 +59,25 @@ class eLucidator(lucidapp.LucidApp):
 				
 		quit = False
 		while not quit:
+			self.ts.update()
+			ret = self.handle_keys()
+			if ret <= 0:
+				quit = True
+			
+			for b in self.buttons:
+				if b.over(self.ts.mx, self.ts.my) and self.ts.double_tap and time.time()-b.last_press > 0.5:
+					b.press()
+					self.ts.double_tap = False
+				b.show()
 
-				self.ts.update()
+			if time.time() - self.timer > 10:
+				print('jumping into random app')
+				b = random.choice(self.buttons[1:])
+				ret = b.press()
+				self.timer = time.time()
 
-				ret = self.handle_keys()
-				if ret <= 0:
-					quit = True
-				
-				for b in self.buttons:
-					if b.over(self.ts.mx, self.ts.my) and self.ts.double_tap and time()-b.last_press > 0.5:
-						ret = b.press()
-						if ret < 0:
-							quit = True
 
-						self.ts.double_tap = False
-					b.show()
-
-				self.draw()
+			self.draw()
 
 		cv2.destroyAllWindows()
 
@@ -88,7 +99,6 @@ if __name__ == '__main__':
 
 	ts = lucidapp.TouchScreen()
 	res = (screen_width, screen_height)
-	
 
 	apps.append(lucidapp.SlideshowTouch(ts=ts, fullscreen=args.fullscreen, resolution=res))
 	apps.append(lucidapp.ImagenetViewer(ts=ts, fullscreen=args.fullscreen, resolution=res))
@@ -97,7 +107,7 @@ if __name__ == '__main__':
 	apps.append(lucidapp.ImageSlider(ts=ts, fullscreen=args.fullscreen, resolution=res))
 	apps.append(lucidapp.NYTimesRSS(ts=ts, fullscreen=args.fullscreen, resolution=res))
 	apps.append(lucidapp.Mandelbrot(ts=ts, fullscreen=args.fullscreen, resolution=res))
-	#apps.append(lucidapp.BallBounce(ts=ts, fullscreen=args.fullscreen, resolution=res))
+	apps.append(lucidapp.BallBounce(ts=ts, fullscreen=args.fullscreen, resolution=res))
 
 	try:
 		apps.append(lucidapp.CVClient(ts=ts, fullscreen=args.fullscreen))
@@ -107,4 +117,3 @@ if __name__ == '__main__':
 	lucidator = eLucidator(apps, ts=ts, fullscreen=args.fullscreen, resolution=res)
 	lucidator.run(args.run)
 
-	cv2.destroyAllWindows()

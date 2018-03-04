@@ -34,7 +34,7 @@ class LucidApp(object):
 		print 'lucid app constructor', resolution
 
 		self.cv2_init()
-		self.buttons.append(Button(self, 'exit', (10,10,75,40), (50,50,50), exit_cv2))
+		self.buttons.append(Button(self, 'exit', (10,10,75,40), (50,50,50), exit_code))
 
 	def __str__(self):
 		return self.name
@@ -47,8 +47,6 @@ class LucidApp(object):
 
 	def draw(self):
 		cv2.imshow('canvas', self.canvas)
-
-		
 
 	def cv2_init(self):
 		if self.fullscreen:
@@ -75,15 +73,15 @@ class LucidApp(object):
 	def label(self, text, x, y, size=1, color=(255,255,255), font=cv2.FONT_HERSHEY_SIMPLEX, font_scale=1.0, thickness=1, alpha=1.0):
 		if alpha < 1.0:
 			copy = self.canvas.copy() # FixME: USE A SUB IMAGE HERE
-			cv2.putText(self.canvas, "PyImageSearch: alpha={}".format(alpha), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 255), 3)
+			cv2.putText(self.canvas, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 255), 3)
 		
 		cv2.putText(self.canvas, text, (x, y), font, font_scale, color, thickness)			
 		
 		if alpha < 1.0:
 			cv2.addWeighted(copy, alpha, self.canvas, 1 - alpha, 0, self.canvas)	
 
-
-
+	def button_width(self):
+		return self.icon_size[0] + self.text_size(self.name)[0] + 25
 
 	def fill(self, color=(0,0,0)):
 		self.canvas = np.zeros(self.resolution_cv, np.uint8)
@@ -222,8 +220,7 @@ class Button:
 		self.last_press = time()
 		return self.callback()
 
-def exit_cv2():
-	cv2.destroyAllWindows()
+def exit_code():
 	return -1
 
 def AAfilledRoundedRect(surface,rect,color,radius=0.4):
